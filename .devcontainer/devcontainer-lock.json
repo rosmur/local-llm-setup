@@ -1,0 +1,9 @@
+{
+  "features": {
+    "ghcr.io/devcontainer-community/devcontainer-features/pi.dev:1": {
+      "version": "1.0.3",
+      "resolved": "ghcr.io/devcontainer-community/devcontainer-features/pi.dev@sha256:b5a240c4d097bb271beb9b01fdba30b30f5a272bcf6a067c4e8f490707fbf8b7",
+      "integrity": "sha256:b5a240c4d097bb271beb9b01fdba30b30f5a272bcf6a067c4e8f490707fbf8b7"
+    }
+  }
+}

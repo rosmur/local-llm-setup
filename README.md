@@ -10,9 +10,21 @@ It is written to be readable and to ask before it does anything. Every step expl
 
 **Reading guide.** Sections 1–5 are for everyone and assume no technical background. Sections 6–9 are the detail an engineer would want before running this on their machine. You do not need the second half to use the script.
 
-- Run it directly by copy/pasting this into your terminal: bash -c "$(curl -fsSL <https://raw.githubusercontent.com/rosmur/local-llm-setup/main/setup-local-pi.sh>)"
-- Or download the script first and then run it: <https://github.com/rosmur/local-llm-setup/blob/main/setup-local-pi.sh>
-  - Run it by typing `sh Downloads/setup-local-pi.sh`
+## Get Started
+
+Two options:
+
+1. Run it directly by copy/pasting this into your terminal:
+
+```bash
+bash -c "$(curl -fsSL <https://raw.githubusercontent.com/rosmur/local-llm-setup/main/setup-local-pi.sh>)"
+```
+
+1. Or download the script first and then run it: <https://github.com/rosmur/local-llm-setup/blob/main/setup-local-pi.sh>. And then run it by typing:
+
+```bash
+sh Downloads/setup-local-pi.sh
+```
 
 **NOTE**
 

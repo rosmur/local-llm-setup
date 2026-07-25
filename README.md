@@ -288,3 +288,7 @@ Stated plainly, because you are being asked to run this on your own machine.
 - **The server flags are reasonable defaults, not tuned ones.** Model authors publish longer, more specific flag sets — particularly for KV-cache quantization and speculative decoding, which can meaningfully improve speed. Those are worth investigating once you have the basic setup working.
 - **The analysis in section 8 covers the copy of `install.sh` that was inspected.** Roughly 60% of its 1500 lines were read closely — the main flow, all Node paths, install-location selection, `PATH` handling, and install/uninstall. The remainder (progress animations and pinned-install validation) was audited by pattern-searching for privilege escalation and destructive operations rather than line by line. Nothing concerning surfaced. That server can also serve different content in future; this is a snapshot, not a guarantee.
 - **The `--min-release-age=0` flag** in pi's installer deliberately bypasses an npm safeguard that delays newly published packages. The stated justification is that pi ships a `npm-shrinkwrap.json` pinning its dependencies. That reasoning is sound in principle but has not been independently verified.
+
+## Additional Info
+
+<https://gist.github.com/rosmur/84f0a77404bd901263de26566ab06f08>

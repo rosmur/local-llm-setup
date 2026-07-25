@@ -1,10 +1,24 @@
-# `setup-local-pi.sh` — Set up a private AI coding assistant on your Mac
+# Local AI Setup - Mac Edition
+
+This repo contains scripts and resources to setup local LLMs and AI.
+
+## `setup-local-pi.sh` — Set up a private LLM based AI assistant on your Mac
 
 This script sets up an AI assistant that runs **entirely on your own Mac**. No account, no API key, no subscription, and nothing you type is sent to a company's servers.
 
 It is written to be readable and to ask before it does anything. Every step explains what it is about to do, shows the exact command, and waits for you to type `y`. Typing anything else skips that step. `Ctrl-C` quits at any point.
 
 **Reading guide.** Sections 1–5 are for everyone and assume no technical background. Sections 6–9 are the detail an engineer would want before running this on their machine. You do not need the second half to use the script.
+
+- Run it directly by copy/pasting this into your terminal: bash -c "$(curl -fsSL <https://raw.githubusercontent.com/rosmur/local-llm-setup/main/setup-local-pi.sh>)"
+- Or download the script first and then run it: <https://github.com/rosmur/local-llm-setup/blob/main/setup-local-pi.sh>
+  - Run it by typing `sh Downloads/setup-local-pi.sh`
+
+**NOTE**
+
+- Written by AI
+- Tested and verified operation on MacBook Pro M1 (Sequoia)
+- Reviewed by human
 
 ---
 

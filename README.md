@@ -1,23 +1,32 @@
-# Local AI Setup - Mac Edition
+# Local AI Setup - Mac Edition <!-- omit from toc -->
 
-This repo contains scripts and resources to setup local LLMs and AI.
+This repo contains scripts and resources to setup local LLMs and AI. Use AI freely - No account, no API key, no subscription, and nothing you type is sent to anybody else's computers.
 
-## `setup-local-pi.sh` — Set up a private LLM based AI assistant on your Mac
-
-This script sets up an AI assistant that runs **entirely on your own Mac**. No account, no API key, no subscription, and nothing you type is sent to a company's servers.
-
-It is written to be readable and to ask before it does anything. Every step explains what it is about to do, shows the exact command, and waits for you to type `y`. Typing anything else skips that step. `Ctrl-C` quits at any point.
+- [Get Started](#get-started)
+- [1. What's installed](#1-whats-installed)
+- [2. Requirements](#2-requirements)
+- [4. Model Choices](#4-model-choices)
+- [5. Using it afterwards](#5-using-it-afterwards)
+- [6. Exactly what gets installed and where](#6-exactly-what-gets-installed-and-where)
+  - [Uninstalling](#uninstalling)
+- [7. Step-by-step, with the actual commands](#7-step-by-step-with-the-actual-commands)
+- [8. Notes on the third-party installer](#8-notes-on-the-third-party-installer)
+- [9. Troubleshooting](#9-troubleshooting)
+- [Known gaps and caveats](#known-gaps-and-caveats)
+- [Additional Info](#additional-info)
 
 **Reading guide.** Sections 1–5 are for everyone and assume no technical background. Sections 6–9 are the detail an engineer would want before running this on their machine. You do not need the second half to use the script.
 
 ## Get Started
 
-Two options:
+The easiest method is to run the setup script as follows that sets up everything for you. It is written to be readable and to ask before it does anything. Every step explains what it is about to do, shows the exact command, and waits for you to type `y`. Typing anything else skips that step. `Ctrl-C` quits at any point. Alternatively, if you prefer to do the setup manually or step by step see Section below.
+
+To run the script, there are two options:
 
 1. Run it directly by copy/pasting this into your terminal:
 
 ```bash
-bash -c "$(curl -fsSL <https://raw.githubusercontent.com/rosmur/local-llm-setup/main/setup-local-pi.sh>)"
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/rosmur/local-llm-setup/main/setup-local-pi.sh)"
 ```
 
 1. Or download the script first and then run it: <https://github.com/rosmur/local-llm-setup/blob/main/setup-local-pi.sh>. And then run it by typing:
@@ -34,7 +43,7 @@ sh Downloads/setup-local-pi.sh
 
 ---
 
-## 1. What you end up with
+## 1. What's installed
 
 Four pieces, installed in order, each one needed by the next:
 
@@ -63,7 +72,7 @@ The arrangement is deliberate. `llama.cpp` runs a small local web server on your
 
 ---
 
-## 2. Before you start
+## 2. Requirements
 
 - **A Mac.** The script refuses to run on anything else.
 - **Disk space.** Between 5 GB and 20 GB depending on which model you pick.
@@ -71,15 +80,9 @@ The arrangement is deliberate. `llama.cpp` runs a small local web server on your
 - **Patience for one step.** The model download is several gigabytes. It can take anywhere from a few minutes to over an hour.
 - **An internet connection** — but only during setup. Afterwards, the assistant works offline.
 
-## 3. Running it
-
-```bash
-bash setup-local-pi.sh
-```
-
 Then read each prompt and answer `y` or `n`. That's the whole thing.
 
-## 4. Choosing a model
+## 4. Model Choices
 
 Step 3 offers three options. All are free and open-weight.
 

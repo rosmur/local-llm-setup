@@ -1,10 +1,12 @@
-# Local AI Setup - Mac Edition <!-- omit from toc -->
+# Local LLM Setup - Mac Edition <!-- omit from toc -->
 
-This repo contains scripts and resources to setup local LLMs and AI. Use AI freely - No account, no API key, no subscription, and nothing you type is sent to anybody else's computers.
+This repo contains scripts and resources to setup local LLMs and AI. *It is geared towards a broad audience - any one who knows how to use a computer through to a SWE.*
+
+**Use AI freely - Your terms, your rules, no account, no API key, no subscription, and none of your informationis sent to anybody else's computers.**
 
 ## Table of Contents <!-- omit from toc -->
 
-- [1. Get Started](#1-get-started)
+- [1. Quick Start](#1-quick-start)
 - [2. What's installed](#2-whats-installed)
 - [3. Requirements](#3-requirements)
 - [4. Model Choices](#4-model-choices)
@@ -16,9 +18,9 @@ This repo contains scripts and resources to setup local LLMs and AI. Use AI free
 
 **Reading guide.** Sections 1–5 are for everyone and assume no technical background. Sections 6–8 are the detail an engineer would want before running this on their machine. You do not need the second half to use the script.
 
-## 1. Get Started
+## 1. Quick Start
 
-The easiest method is to run the setup script as follows that sets up everything for you. It is written to be readable and to ask before it does anything. Every step explains what it is about to do, shows the exact command, and waits for you to type `y`. Typing anything else skips that step. `Ctrl-C` quits at any point. Alternatively, if you prefer to do the setup manually or step by step see the [manual installation section](#9-manual-installation).
+The easiest method is to run the setup script as follows that sets up everything for you.
 
 To run the script, there are two options:
 
@@ -31,8 +33,10 @@ bash -c "$(curl -fsSL https://raw.githubusercontent.com/rosmur/local-llm-setup/m
 1. Or download the script first and then run it: <https://github.com/rosmur/local-llm-setup/blob/main/setup-local-pi.sh>. And then run it by typing:
 
 ```bash
-sh Downloads/setup-local-pi.sh
+bash Downloads/setup-local-pi.sh
 ```
+
+*It is written to be readable and to ask before it does anything. Every step explains what it is about to do, shows the exact command, and waits for you to type `y`. Typing anything else skips that step. `Ctrl-C` quits at any point. Alternatively, if you prefer to do the setup manually or step by step see the [manual installation section](#7-manual-installation).*
 
 ### NOTE <!-- omit from toc -->
 

@@ -1,0 +1,61 @@
+site_name: Local LLM Setup
+site_description: Setup scripts and documentation for running local LLMs on Mac — no account, no API key, no subscription, fully offline.
+site_url: https://rosmur.github.io/local-llm-setup/
+repo_url: https://github.com/rosmur/local-llm-setup
+repo_name: rosmur/local-llm-setup
+edit_uri: edit/main/docs/
+
+theme:
+  name: material
+  language: en
+  palette:
+    - scheme: default
+      primary: black
+      accent: blue
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+    - scheme: slate
+      primary: black
+      accent: blue
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - search.highlight
+    - content.code.copy
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.highlight
+  - pymdownx.tabbed:
+      alternate_style: true
+  - tables
+  - toc:
+      permalink: true
+
+nav:
+  - Home: index.md
+  - Getting Started:
+      - Quick Start: quick-start.md
+      - Requirements: requirements.md
+      - Model Choices: model-choices.md
+  - Using the Setup:
+      - What's Installed: whats-installed.md
+      - Usage: usage.md
+      - Uninstallation: uninstallation.md
+  - Reference:
+      - Manual Installation: script-manual.md
+      - Troubleshooting: TROUBLESHOOTING.md
+      - Glossary: glossary.md
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/rosmur/local-llm-setup

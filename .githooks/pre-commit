@@ -1,0 +1,19 @@
+#!/bin/bash
+# Pre-commit hook: regenerate README.md from docs/ pages when docs/ changes.
+
+set -e
+
+CHANGED=$(git diff --cached --name-only --diff-filter=ACMR | grep -E '^docs/.+\.md$' || true)
+
+if [ -z "$CHANGED" ]; then
+    exit 0
+fi
+
+echo "📝 docs/ changed — regenerating README.md from canonical docs pages..."
+
+python3 scripts/build-readme.py
+
+# Stage the updated README.md so it's included in the commit
+git add README.md
+
+echo "✓ README.md updated and staged."

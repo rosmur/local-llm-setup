@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Local LLM Setup Workshop — Survey</title>
+<style>
+  :root {
+    --bg: #f5f0eb;
+    --card: #fffaf5;
+    --border: #e6ddd2;
+    --text: #3d3529;
+    --text-muted: #8a7e6f;
+    --primary: #9b8b7a;
+    --primary-hover: #7f7060;
+    --primary-light: #e8dfd4;
+    --accent: #c9a87c;
+    --danger: #e07a7a;
+    --success: #7fb885;
+    --shadow: 0 2px 12px rgba(0,0,0,0.06);
+    --shadow-lg: 0 4px 24px rgba(0,0,0,0.08);
+    --radius: 16px;
+    --radius-sm: 10px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .container {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 24px 16px 48px;
+  }
+
+  /* Header */
+  header {
+    text-align: center;
+    padding: 40px 0 28px;
+  }
+  header .icon-head {
+    font-size: 40px;
+    margin-bottom: 8px;
+  }
+  header h1 {
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+    color: var(--text);
+  }
+  header p {
+    color: var(--text-muted);
+    font-size: 15px;
+    margin-top: 6px;
+    line-height: 1.6;
+  }
+
+  /* Progress bar */
+  .progress-wrap {
+    background: var(--border);
+    border-radius: 99px;
+    height: 8px;
+    margin-bottom: 28px;
+    overflow: hidden;
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
+  }
+  .progress-bar {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--accent), #dbbd99);
+    border-radius: 99px;
+    transition: width 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  /* Question card */
+  .card {
+    background: var(--card);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow);
+    transition: box-shadow 0.2s, border-color 0.2s;
+  }
+  .card:focus-within {
+    border-color: var(--accent);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .card label.q {
+    display: block;
+    font-size: 17px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    line-height: 1.5;
+    color: var(--text);
+  }
+  .card label.q .required {
+    color: var(--danger);
+    margin-left: 2px;
+  }
+  .card label.q .optional {
+    color: var(--text-muted);
+    font-weight: 400;
+    font-size: 13px;
+    margin-left: 6px;
+  }
+
+  /* Options (radio / checkbox) */
+  .options { display: flex; flex-direction: column; gap: 10px; }
+
+  .option {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 18px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all 0.15s;
+    -webkit-user-select: none;
+    user-select: none;
+    background: rgba(255,255,255,0.5);
+  }
+  .option:hover {
+    border-color: #d4c8b8;
+    background: rgba(255,255,255,0.8);
+  }
+  .option.selected {
+    border-color: var(--accent);
+    background: rgba(201, 168, 124, 0.1);
+    box-shadow: 0 0 0 2px rgba(201, 168, 124, 0.15);
+  }
+
+  .option input {
+    width: 20px;
+    height: 20px;
+    accent-color: var(--accent);
+    flex-shrink: 0;
+    cursor: pointer;
+  }
+  .option label {
+    font-size: 16px;
+    cursor: pointer;
+    flex: 1;
+    line-height: 1.4;
+    color: var(--text);
+  }
+
+  /* --- RAM Slider --- */
+  .slider-wrap {
+    padding: 8px 4px 4px;
+  }
+
+  .slider-value {
+    text-align: center;
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 4px;
+    letter-spacing: -0.5px;
+    line-height: 1.2;
+  }
+  .slider-value .unit {
+    font-size: 16px;
+    font-weight: 400;
+    color: var(--text-muted);
+    margin-left: 4px;
+  }
+
+  .slider-ticks {
+    display: flex;
+    justify-content: space-between;
+    padding: 0;
+    margin: 2px 0 0;
+    list-style: none;
+  }
+  .slider-ticks li {
+    width: 2px;
+    height: 8px;
+    background: var(--border);
+    border-radius: 1px;
+  }
+  .slider-ticks li.active {
+    background: var(--accent);
+  }
+
+  input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 6px;
+    background: var(--border);
+    border-radius: 99px;
+    outline: none;
+    margin: 8px 0 4px;
+    transition: background 0.2s;
+  }
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--card);
+    border: 2.5px solid var(--accent);
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+    transition: transform 0.15s;
+  }
+  input[type="range"]::-webkit-slider-thumb:hover {
+    transform: scale(1.08);
+  }
+  input[type="range"]::-webkit-slider-thumb:active {
+    transform: scale(0.95);
+  }
+  input[type="range"]::-moz-range-thumb {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--card);
+    border: 2.5px solid var(--accent);
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+  }
+  input[type="range"]::-moz-range-track {
+    height: 6px;
+    background: var(--border);
+    border-radius: 99px;
+  }
+
+  .slider-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 2px;
+    padding: 0;
+  }
+
+  /* Text input */
+  input[type="text"], textarea, select {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-size: 16px;
+    font-family: inherit;
+    background: var(--card);
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.15s;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  input[type="text"]:focus, textarea:focus, select:focus {
+    border-color: var(--accent);
+  }
+  textarea { resize: vertical; min-height: 80px; }
+
+  /* Buttons */
+  .btn-row {
+    display: flex;
+    gap: 12px;
+    margin-top: 28px;
+    flex-wrap: wrap;
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 14px 28px;
+    font-size: 16px;
+    font-weight: 600;
+    border: none;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all 0.15s;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    box-shadow: var(--shadow);
+  }
+  .btn:active { transform: scale(0.97); }
+
+  .btn-primary {
+    background: var(--accent);
+    color: #fff;
+  }
+  .btn-primary:hover {
+    background: #be9d72;
+    box-shadow: var(--shadow-lg);
+  }
+  .btn-primary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+
+  .btn-outline {
+    background: var(--card);
+    color: var(--text-muted);
+    border: 1.5px solid var(--border);
+    box-shadow: none;
+  }
+  .btn-outline:hover {
+    border-color: #d4c8b8;
+    background: #fff;
+  }
+
+  .btn-danger {
+    background: #fdf0ee;
+    color: var(--danger);
+    box-shadow: none;
+  }
+  .btn-danger:hover { background: #fce4e2; }
+
+  /* Success state */
+  .success-screen {
+    display: none;
+    text-align: center;
+    padding: 48px 16px;
+    background: var(--card);
+    border-radius: var(--radius);
+    border: 1.5px solid var(--border);
+    box-shadow: var(--shadow);
+  }
+  .success-screen.show { display: block; }
+  .success-screen .icon {
+    font-size: 56px;
+    margin-bottom: 16px;
+  }
+  .success-screen h2 {
+    font-size: 22px;
+    margin-bottom: 8px;
+    color: var(--text);
+  }
+  .success-screen p {
+    color: var(--text-muted);
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  /* Admin link */
+  .admin-link {
+    text-align: center;
+    margin-top: 32px;
+    padding-top: 20px;
+  }
+  .admin-link a {
+    color: var(--text-muted);
+    font-size: 13px;
+    text-decoration: none;
+    opacity: 0.7;
+    transition: opacity 0.15s;
+  }
+  .admin-link a:hover {
+    opacity: 1;
+    text-decoration: underline;
+  }
+
+  /* ===== Admin ===== */
+  .admin-section { display: none; }
+  .admin-section.show { display: block; }
+
+  .admin-login {
+    max-width: 400px;
+    margin: 80px auto;
+    text-align: center;
+  }
+  .admin-login input {
+    margin-top: 16px;
+    text-align: center;
+    font-size: 18px;
+    letter-spacing: 2px;
+  }
+  .admin-login .error {
+    color: var(--danger);
+    font-size: 14px;
+    margin-top: 8px;
+    display: none;
+  }
+
+  .admin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1.5px solid var(--border);
+  }
+  .admin-header h2 { font-size: 20px; }
+
+  .admin-stats {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+  .admin-stats .stat {
+    background: var(--card);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 16px 24px;
+    text-align: center;
+    flex: 1;
+    min-width: 120px;
+    box-shadow: var(--shadow);
+  }
+  .admin-stats .stat .num {
+    font-size: 30px;
+    font-weight: 700;
+    color: var(--accent);
+  }
+  .admin-stats .stat .lbl {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-top: 2px;
+  }
+
+  .response-item {
+    background: var(--card);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 16px 20px;
+    margin-bottom: 12px;
+    box-shadow: var(--shadow);
+  }
+  .response-item .meta {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+  }
+  .response-item table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+  }
+  .response-item td {
+    padding: 5px 10px 5px 0;
+    vertical-align: top;
+  }
+  .response-item td:first-child {
+    font-weight: 600;
+    white-space: nowrap;
+    color: var(--text-muted);
+    width: 40%;
+  }
+  .response-item td:last-child { word-break: break-word; }
+
+  .no-responses {
+    text-align: center;
+    padding: 40px;
+    color: var(--text-muted);
+  }
+
+  /* iPad optimizations */
+  @media (hover: none) and (pointer: coarse) {
+    .option { padding: 16px 18px; }
+    .btn { padding: 16px 32px; }
+    input[type="range"]::-webkit-slider-thumb {
+      width: 32px;
+      height: 32px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="container" id="app">
+  <!-- Survey View -->
+  <div id="surveyView">
+    <header>
+      <div class="icon-head">📋</div>
+      <h1>Local LLM Setup</h1>
+      <p>Help us tailor the workshop to everyone's hardware and experience.</p>
+    </header>
+
+    <div class="progress-wrap">
+      <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <form id="surveyForm" novalidate>
+      <!-- Q1 -->
+      <div class="card" data-q="1">
+        <label class="q">What operating system do you primarily use? <span class="required">*</span></label>
+        <div class="options" data-name="os">
+          <div class="option"><input type="radio" name="os" value="Linux" id="os-linux"><label for="os-linux">🐧 Linux</label></div>
+          <div class="option"><input type="radio" name="os" value="macOS" id="os-macos"><label for="os-macos">🍎 macOS</label></div>
+          <div class="option"><input type="radio" name="os" value="Windows" id="os-windows"><label for="os-windows">🪟 Windows</label></div>
+          <div class="option"><input type="radio" name="os" value="Other" id="os-other"><label for="os-other">Other</label></div>
+        </div>
+      </div>
+
+      <!-- Q2 -->
+      <div class="card" data-q="2">
+        <label class="q">What GPU do you have available? <span class="required">*</span></label>
+        <div class="options" data-name="gpu">
+          <div class="option"><input type="radio" name="gpu" value="NVIDIA (CUDA)" id="gpu-nvidia"><label for="gpu-nvidia">NVIDIA (CUDA)</label></div>
+          <div class="option"><input type="radio" name="gpu" value="AMD (ROCm)" id="gpu-amd"><label for="gpu-amd">AMD (ROCm)</label></div>
+          <div class="option"><input type="radio" name="gpu" value="Apple Silicon (M-series)" id="gpu-apple"><label for="gpu-apple">Apple Silicon (M-series)</label></div>
+          <div class="option"><input type="radio" name="gpu" value="Intel Arc" id="gpu-intel"><label for="gpu-intel">Intel Arc</label></div>
+          <div class="option"><input type="radio" name="gpu" value="CPU only / None" id="gpu-none"><label for="gpu-none">CPU only / No dedicated GPU</label></div>
+          <div class="option"><input type="radio" name="gpu" value="Not sure" id="gpu-unsure"><label for="gpu-unsure">🤷 Not sure</label></div>
+        </div>
+      </div>
+
+      <!-- Q3 — RAM Slider -->
+      <div class="card" data-q="3">
+        <label class="q">How much RAM does your system have? <span class="required">*</span></label>
+        <div class="slider-wrap" data-name="ram">
+          <div class="slider-value" id="ramDisplay">16<span class="unit">GB</span></div>
+          <input type="range" id="ramSlider" min="0" max="11" value="3" step="1">
+          <ul class="slider-ticks" id="ramTicks"></ul>
+          <div class="slider-labels">
+            <span>4 GB</span>
+            <span>256 GB</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Q4 -->
+      <div class="card" data-q="4">
+        <label class="q">What's your experience with running local LLMs? <span class="required">*</span></label>
+        <div class="options" data-name="experience">
+          <div class="option"><input type="radio" name="experience" value="Beginner" id="exp-beginner"><label for="exp-beginner">🟢 Beginner — Never tried</label></div>
+          <div class="option"><input type="radio" name="experience" value="Intermediate" id="exp-intermediate"><label for="exp-intermediate">🟡 Intermediate — Tried a few times</label></div>
+          <div class="option"><input type="radio" name="experience" value="Advanced" id="exp-advanced"><label for="exp-advanced">🔴 Advanced — Run models regularly</label></div>
+        </div>
+      </div>
+
+      <!-- Q5 — Checkboxes -->
+      <div class="card" data-q="5">
+        <label class="q">What are you interested in running locally? <span class="optional">(select all that apply)</span></label>
+        <div class="options" data-name="interest">
+          <div class="option"><input type="checkbox" name="interest" value="Chat / Assistant models (Llama, Mistral, etc.)" id="int-chat"><label for="int-chat">💬 Chat / Assistant models</label></div>
+          <div class="option"><input type="checkbox" name="interest" value="Code generation (Code Llama, DeepSeek Coder, etc.)" id="int-code"><label for="int-code">⌨️ Code generation</label></div>
+          <div class="option"><input type="checkbox" name="interest" value="Image generation (Stable Diffusion, etc.)" id="int-image"><label for="int-image">🎨 Image generation</label></div>
+          <div class="option"><input type="checkbox" name="interest" value="Voice / Speech (Whisper, TTS)" id="int-voice"><label for="int-voice">🎤 Voice / Speech</label></div>
+          <div class="option"><input type="checkbox" name="interest" value="All of the above!" id="int-all"><label for="int-all">🚀 All of the above!</label></div>
+          <div class="option"><input type="checkbox" name="interest" value="Other / Not sure" id="int-other"><label for="int-other">Other / Not sure</label></div>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button type="submit" class="btn btn-primary" id="submitBtn">Submit Survey</button>
+        <button type="button" class="btn btn-outline" id="clearBtn">Clear</button>
+      </div>
+    </form>
+
+    <div class="success-screen" id="successScreen">
+      <div class="icon">✅</div>
+      <h2>Thanks for your response!</h2>
+      <p>Your answers have been recorded. This helps us tailor the workshop to the group.</p>
+      <div class="btn-row" style="justify-content:center;margin-top:20px;">
+        <button class="btn btn-outline" id="anotherBtn">Submit another response</button>
+      </div>
+    </div>
+
+    <div class="admin-link">
+      <a href="#" id="adminLink">🔐 Admin</a>
+    </div>
+  </div>
+
+  <!-- Admin View -->
+  <div class="admin-section" id="adminView">
+    <div id="adminLogin" class="admin-login">
+      <div style="font-size:48px;margin-bottom:8px;">🔐</div>
+      <h2>Admin Panel</h2>
+      <p style="color:var(--text-muted);font-size:14px;">Enter the access code to view responses.</p>
+      <input type="password" id="adminPass" placeholder="Access code" autocomplete="off">
+      <div class="error" id="adminError">Incorrect code</div>
+      <div class="btn-row" style="justify-content:center;">
+        <button class="btn btn-primary" id="adminLoginBtn">Enter</button>
+        <button class="btn btn-outline" id="adminBackBtn">← Back</button>
+      </div>
+    </div>
+
+    <div id="adminDashboard" style="display:none;">
+      <div class="admin-header">
+        <h2>📊 Survey Responses</h2>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <button class="btn btn-primary" id="exportCsvBtn">⬇ Export CSV</button>
+          <button class="btn btn-outline" id="adminLogoutBtn">Logout</button>
+          <button class="btn btn-outline" id="adminBackBtn2">← Back</button>
+        </div>
+      </div>
+
+      <div class="admin-stats">
+        <div class="stat"><div class="num" id="statTotal">0</div><div class="lbl">Responses</div></div>
+        <div class="stat"><div class="num" id="statToday">0</div><div class="lbl">Today</div></div>
+      </div>
+
+      <div id="responsesList"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function() {
+  'use strict';
+
+  const STORAGE_KEY = 'llm_survey_responses';
+  const ADMIN_CODE = 'llm2024'; // change this!
+  const Q_NAMES = ['os','gpu','ram','experience','interest'];
+  const Q_LABELS = {
+    os: 'Operating System',
+    gpu: 'GPU',
+    ram: 'RAM',
+    experience: 'Experience',
+    interest: 'Interest'
+  };
+
+  // RAM slider config — intelligent setpoints
+  const RAM_VALUES = [4, 8, 12, 16, 24, 32, 48, 64, 96, 128, 192, 256];
+
+  // Build slider ticks
+  const ramSlider = document.getElementById('ramSlider');
+  const ramDisplay = document.getElementById('ramDisplay');
+  const ramTicks = document.getElementById('ramTicks');
+
+  RAM_VALUES.forEach((v, i) => {
+    const li = document.createElement('li');
+    li.dataset.idx = i;
+    ramTicks.appendChild(li);
+  });
+
+  function updateRamDisplay(idx) {
+    const val = RAM_VALUES[idx];
+    ramDisplay.innerHTML = val + '<span class="unit">GB</span>';
+    // Highlight ticks up to current position
+    ramTicks.querySelectorAll('li').forEach((li, i) => {
+      li.classList.toggle('active', i <= idx);
+    });
+  }
+
+  ramSlider.addEventListener('input', () => {
+    updateRamDisplay(parseInt(ramSlider.value));
+    updateProgress();
+  });
+
+  // Initialize RAM display at default position (index 3 = 16GB)
+  updateRamDisplay(3);
+
+  // --- Survey ---
+  const surveyForm = document.getElementById('surveyForm');
+  const successScreen = document.getElementById('successScreen');
+  const clearBtn = document.getElementById('clearBtn');
+  const anotherBtn = document.getElementById('anotherBtn');
+  const progressBar = document.getElementById('progressBar');
+
+  // Admin elements
+  const adminView = document.getElementById('adminView');
+  const adminLogin = document.getElementById('adminLogin');
+  const adminDashboard = document.getElementById('adminDashboard');
+  const adminPass = document.getElementById('adminPass');
+  const adminError = document.getElementById('adminError');
+  const adminLoginBtn = document.getElementById('adminLoginBtn');
+  const adminBackBtn = document.getElementById('adminBackBtn');
+  const adminBackBtn2 = document.getElementById('adminBackBtn2');
+  const adminLogoutBtn = document.getElementById('adminLogoutBtn');
+  const adminLink = document.getElementById('adminLink');
+  const exportCsvBtn = document.getElementById('exportCsvBtn');
+  const responsesList = document.getElementById('responsesList');
+  const statTotal = document.getElementById('statTotal');
+  const statToday = document.getElementById('statToday');
+  const surveyView = document.getElementById('surveyView');
+
+  // --- Touch-friendly option selection ---
+  document.querySelectorAll('.options').forEach(group => {
+    group.addEventListener('click', e => {
+      const opt = e.target.closest('.option');
+      if (!opt) return;
+      const input = opt.querySelector('input');
+      if (!input) return;
+      if (input.type === 'radio') {
+        group.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+        opt.classList.add('selected');
+        input.checked = true;
+      } else {
+        // Checkbox: toggle
+        opt.classList.toggle('selected');
+        input.checked = opt.classList.contains('selected');
+      }
+      updateProgress();
+    });
+  });
+
+  function getFormData() {
+    const data = {};
+    Q_NAMES.forEach(name => {
+      if (name === 'interest') {
+        const checked = document.querySelectorAll('input[name="interest"]:checked');
+        data[name] = Array.from(checked).map(el => el.value).join('; ');
+      } else if (name === 'ram') {
+        const idx = parseInt(ramSlider.value);
+        data[name] = RAM_VALUES[idx] + ' GB';
+      } else {
+        const el = document.querySelector(`input[name="${name}"]:checked`);
+        data[name] = el ? el.value : '';
+      }
+    });
+    return data;
+  }
+
+  function updateProgress() {
+    const data = getFormData();
+    // Q1-Q4 are required
+    const required = Q_NAMES.slice(0, 4);
+    let filled = required.filter(n => data[n] && data[n].trim() !== '').length;
+    const pct = Math.round((filled / required.length) * 100);
+    progressBar.style.width = pct + '%';
+  }
+
+  surveyForm.addEventListener('change', updateProgress);
+  updateProgress();
+
+  // --- Submit ---
+  surveyForm.addEventListener('submit', e => {
+    e.preventDefault();
+    const data = getFormData();
+
+    // Validate required (Q1-Q4)
+    const required = Q_NAMES.slice(0, 4);
+    for (const n of required) {
+      if (!data[n] || data[n].trim() === '') {
+        const card = document.querySelector(`.card[data-q="${required.indexOf(n)+1}"]`);
+        card.style.borderColor = '#e07a7a';
+        card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        setTimeout(() => card.style.borderColor = '', 2000);
+        return;
+      }
+    }
+
+    // Save
+    const response = {
+      id: Date.now() + '_' + Math.random().toString(36).slice(2,8),
+      timestamp: new Date().toISOString(),
+      ...data
+    };
+
+    const responses = getResponses();
+    responses.push(response);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(responses));
+
+    // Show success
+    surveyForm.style.display = 'none';
+    successScreen.classList.add('show');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  // --- Clear ---
+  clearBtn.addEventListener('click', () => {
+    Q_NAMES.forEach(name => {
+      if (name === 'ram') {
+        ramSlider.value = '3';
+        updateRamDisplay(3);
+      } else {
+        document.querySelectorAll(`input[name="${name}"]`).forEach(r => { r.checked = false; });
+      }
+    });
+    document.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+    updateProgress();
+  });
+
+  // --- Another response ---
+  anotherBtn.addEventListener('click', () => {
+    Q_NAMES.forEach(name => {
+      if (name === 'ram') {
+        ramSlider.value = '3';
+        updateRamDisplay(3);
+      } else {
+        document.querySelectorAll(`input[name="${name}"]`).forEach(r => { r.checked = false; });
+      }
+    });
+    document.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+    successScreen.classList.remove('show');
+    surveyForm.style.display = 'block';
+    updateProgress();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  // --- Storage ---
+  function getResponses() {
+    try {
+      return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+    } catch { return []; }
+  }
+
+  // --- Admin ---
+  adminLink.addEventListener('click', e => {
+    e.preventDefault();
+    surveyView.style.display = 'none';
+    adminView.classList.add('show');
+    adminLogin.style.display = 'block';
+    adminDashboard.style.display = 'none';
+    adminPass.value = '';
+    adminError.style.display = 'none';
+  });
+
+  function backToSurvey() {
+    adminView.classList.remove('show');
+    surveyView.style.display = '';
+  }
+
+  adminBackBtn.addEventListener('click', backToSurvey);
+  adminBackBtn2.addEventListener('click', backToSurvey);
+
+  adminLoginBtn.addEventListener('click', () => {
+    if (adminPass.value === ADMIN_CODE) {
+      adminLogin.style.display = 'none';
+      adminDashboard.style.display = 'block';
+      adminError.style.display = 'none';
+      renderAdmin();
+    } else {
+      adminError.style.display = 'block';
+    }
+  });
+
+  adminPass.addEventListener('keydown', e => {
+    if (e.key === 'Enter') adminLoginBtn.click();
+  });
+
+  adminLogoutBtn.addEventListener('click', () => {
+    adminDashboard.style.display = 'none';
+    adminLogin.style.display = 'block';
+    adminPass.value = '';
+    adminError.style.display = 'none';
+  });
+
+  function renderAdmin() {
+    const responses = getResponses();
+    statTotal.textContent = responses.length;
+
+    const today = new Date().toISOString().slice(0,10);
+    const todayCount = responses.filter(r => r.timestamp.slice(0,10) === today).length;
+    statToday.textContent = todayCount;
+
+    if (responses.length === 0) {
+      responsesList.innerHTML = '<div class="no-responses">No responses yet.</div>';
+      return;
+    }
+
+    let html = '';
+    // Most recent first
+    [...responses].reverse().forEach(r => {
+      const t = new Date(r.timestamp);
+      const dateStr = t.toLocaleDateString() + ' ' + t.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+      html += '<div class="response-item">';
+      html += `<div class="meta">🕐 ${dateStr} · ID: ${r.id.slice(-8)}</div>`;
+      html += '<table>';
+      Q_NAMES.forEach(n => {
+        html += `<tr><td>${Q_LABELS[n]}</td><td>${r[n] || '—'}</td></tr>`;
+      });
+      html += '</table></div>';
+    });
+    responsesList.innerHTML = html;
+  }
+
+  // --- Export CSV ---
+  exportCsvBtn.addEventListener('click', () => {
+    const responses = getResponses();
+    if (responses.length === 0) { alert('No responses to export.'); return; }
+
+    const headers = ['Timestamp', ...Q_NAMES.map(n => Q_LABELS[n])];
+    const rows = responses.map(r => {
+      return [r.timestamp, ...Q_NAMES.map(n => `"${(r[n]||'').replace(/"/g,'""')}"`)].join(',');
+    });
+    const csv = [headers.join(','), ...rows].join('\n');
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'llm-workshop-survey.csv';
+    a.click();
+    URL.revokeObjectURL(url);
+  });
+
+  // Keyboard shortcut: Ctrl+Shift+A for admin
+  document.addEventListener('keydown', e => {
+    if (e.ctrlKey && e.shiftKey && (e.key === 'A' || e.key === 'a')) {
+      e.preventDefault();
+      adminLink.click();
+    }
+  });
+
+})();
+</script>
+</body>
+</html>

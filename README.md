@@ -2,16 +2,17 @@
 
 This repo contains scripts and resources to setup local LLMs and AI. Use AI freely - No account, no API key, no subscription, and nothing you type is sent to anybody else's computers.
 
+## Table of Contents <!-- omit from toc -->
+
 - [1. Get Started](#1-get-started)
 - [2. What's installed](#2-whats-installed)
 - [3. Requirements](#3-requirements)
 - [4. Model Choices](#4-model-choices)
 - [5. Usage](#5-usage)
 - [6. Uninstallation](#6-uninstallation)
-- [7. Troubleshooting](#7-troubleshooting)
-- [8. Known gaps and caveats](#8-known-gaps-and-caveats)
-- [9. Manual Installation](#9-manual-installation)
-- [10. Additional Info](#10-additional-info)
+- [7. Manual Installation](#7-manual-installation)
+- [8. Additional Info](#8-additional-info)
+- [Glossary](#glossary)
 
 **Reading guide.** Sections 1–5 are for everyone and assume no technical background. Sections 6–8 are the detail an engineer would want before running this on their machine. You do not need the second half to use the script.
 
@@ -33,11 +34,12 @@ bash -c "$(curl -fsSL https://raw.githubusercontent.com/rosmur/local-llm-setup/m
 sh Downloads/setup-local-pi.sh
 ```
 
-**NOTE**
+### NOTE <!-- omit from toc -->
 
 - Written by AI
 - Tested and verified operation on MacBook Pro M1 (Sequoia)
 - Reviewed by human
+- **Re-running the script is always safe.** Every step detects work that is already done and skips it, so an interrupted run — a dropped connection during the download, a closed laptop lid — is recovered by just starting again. The menu marks which models you already have, and nothing is downloaded twice.
 
 ---
 
@@ -46,26 +48,29 @@ sh Downloads/setup-local-pi.sh
 Four pieces, installed in order, each one needed by the next:
 
 | Piece | What it is | Why it's here |
-|---|---|---|
+| --- | --- | --- |
 | **Homebrew** | A "app store for the command line" that macOS doesn't ship with | It's how the next piece gets installed |
 | **llama.cpp** | Software that runs AI models on your own hardware | This is the engine |
 | **A model** | The AI itself — a multi-gigabyte file you choose from a menu | This is the brain |
 | **pi** | A coding assistant that lives in your terminal | This is the part you talk to |
 
-The arrangement is deliberate. `llama.cpp` runs a small local web server on your machine that speaks the same language as commercial AI services. `pi` is then pointed at that local server instead of at the internet. `pi` never knows the difference — and neither does your data, which never leaves the machine.
+This arrangement is minimal. `llama.cpp` runs a small local web server on your machine that speaks the same language as commercial AI services (i.e. OpenaAI API Compatible). `pi` is then pointed at that local server instead of at the internet. `pi` never knows the difference — and neither does your data, which never leaves the machine. Thus they hook up to each other as follows:
 
-```
-   You type in the terminal
-            │
-            ▼
-        [  pi  ]  ← the assistant: reads files, writes code, runs commands
-            │
-            │  talks over http://localhost:8080  (localhost = your own Mac)
-            ▼
-   [ llama-server ]  ← part of llama.cpp; loads the model, does the thinking
-            │
-            ▼
-   [ the model file ]  ← several GB sitting on your disk
+```mermaid
+flowchart TD
+    User@{ shape: manual-input, label: "User Input"}
+    Pi["`**pi** — the agent`"]
+    Server["`**llama-server** — runs the AI (part of llama.cpp)`"]
+    AIModel["`the **LLM model** — a file sitting on your disk`"]
+
+    User --> Pi
+    Pi -- "talks over the local API from " --> Server
+    Server -- "points to" --> AIModel
+
+    style User fill:#e8f5e9,stroke:#a5d6a7,color:#2e7d32
+    style Pi fill:#e3f2fd,stroke:#90caf9,color:#1565c0
+    style Server fill:#fff3e0,stroke:#ffcc80,color:#e65100
+    style AIModel fill:#f3e5f5,stroke:#ce93d8,color:#6a1b9a
 ```
 
 <details>
@@ -74,7 +79,7 @@ The arrangement is deliberate. `llama.cpp` runs a small local web server on your
 Nothing here is hidden; this is the full list of changes to your machine.
 
 | Path | What | Created by |
-|---|---|---|
+| --- | --- | --- |
 | `/opt/homebrew` (Apple Silicon) or `/usr/local` (Intel) | Homebrew and everything it installs | Homebrew's own installer |
 | `<brew prefix>/bin/llama-server`, `llama-cli` | The inference engine | `brew install llama.cpp` |
 | `~/.cache/huggingface/hub/` | Downloaded model weights (the big files) | `llama-cli` / `llama-server` |
@@ -103,19 +108,17 @@ Then read each prompt and answer `y` or `n`. That's the whole thing.
 
 ## 4. Model Choices
 
-Step 3 offers three options. All are free and open-weight.
+Step 3 offers three options. All are free and open-weight. These are the best overall models *targeted for RAM <32GB*  available as of this writing (July 2026) with relatively large user validation and maturity.
 
 | | Model | Download | Notes |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | **1** | Gemma 4 E4B | ~4.6 GB | The small, fast one. Works on modest machines. A reasonable first choice if you're unsure. |
 | **2** | Gemma 4 26B-A4B (QAT) | ~15 GB | Much more capable, but only activates a small slice of itself per word, so it stays fast. Wants ~24 GB of RAM. |
 | **3** | Qwen3.5 35B-A3B | ~20 GB | Same idea, different family. Strong at code. Wants ~32 GB of RAM. |
 
-"QAT" on option 2 means the model was *trained* to survive being compressed, so it loses less quality than ordinary compression would cost.
-
 If you pick wrong, nothing is lost. Re-run the script and choose a different one; both models stay cached on disk and the script will simply point `pi` at whichever you chose most recently.
 
-**Re-running the script is always safe.** Every step detects work that is already done and skips it, so an interrupted run — a dropped connection during the download, a closed laptop lid — is recovered by just starting again. The menu marks which models you already have, and nothing is downloaded twice.
+If you wish to use a more powerful model (if you have more RAM) or just want to explore, there are literally 1000s of options available. The best place to find them is [huggingface.co](huggingface.co)
 
 ## 5. Usage
 
@@ -157,30 +160,7 @@ rm ~/bin/llama-serve-*.sh                          # remove the launcher
 
 Homebrew itself is left in place, since you may have other things depending on it.
 
-## 7. Troubleshooting
-
-| Symptom | Cause and fix |
-|---|---|
-| `pi: command not found` | The install directory isn't on your `PATH` yet. Open a **new** terminal window; pi's installer offers to fix your shell profile permanently. |
-| Your model isn't in `pi`'s `/model` list | Two usual causes. The server isn't running — check with `curl http://localhost:8080/v1/models`. Or `pi` has no stored credential for the provider — start it once with `pi --api-key none`. |
-| Server exits with a memory error | The model is too big for your RAM. Lower `-c 32768` to `-c 8192` in the launcher, or re-run the script and pick a smaller model. |
-| Painfully slow responses | Also memory. The Mac is swapping to disk. Same fix. |
-| Download step drops you into a chat prompt | Should not happen — three separate guards prevent it. If it does, press `Ctrl-C`; the download has already finished by the time the prompt appears, and the script continues normally. |
-| Port 8080 already in use | Something else has it. Change the port in **both** the launcher script and the `baseUrl` in `models.json` — they must agree. |
-| `brew: command not found` after step 1 | Homebrew installed but isn't on this shell's `PATH`. Open a new terminal and re-run the script; it'll detect the existing install and skip ahead. |
-
----
-
-## 8. Known gaps and caveats
-
-Stated plainly, because you are being asked to run this on your own machine.
-
-- **The one-token download trick** (`llama-cli ... -n 1 -no-cnv`) is a construction, not a documented workflow. The documented approach is to let `llama-server -hf` download on first launch. If the flags misbehave on your build of `llama.cpp`, answer `n` at the download prompt and let the server handle it.
-- **The "already downloaded" check is advisory, not authoritative.** It reliably detects that a model *repository* is cached, but in the Hugging Face layout the individual files are named by content hash, so it cannot always confirm that the specific compression level (quant) is present or that the files are complete. This is why the verification pass is still offered. A false "on disk" would at worst cause `llama-server` to download the missing piece on first launch.
-- **The server flags are reasonable defaults, not tuned ones.** Model authors publish longer, more specific flag sets — particularly for KV-cache quantization and speculative decoding, which can meaningfully improve speed. Those are worth investigating once you have the basic setup working.
-- **The `--min-release-age=0` flag** in pi's installer deliberately bypasses an npm safeguard that delays newly published packages. The stated justification is that pi ships a `npm-shrinkwrap.json` pinning its dependencies. That reasoning is sound in principle but has not been independently verified.
-
-## 9. Manual Installation
+## 7. Manual Installation
 
 Manual installation is recommended if you:
 
@@ -190,6 +170,14 @@ Manual installation is recommended if you:
 
 See [here for step by step installation instructions](docs/script-manual.md)
 
-## 10. Additional Info
+## 8. Additional Info
 
-<https://gist.github.com/rosmur/84f0a77404bd901263de26566ab06f08>
+| Doc | Description |
+| ------ | -------- |
+| [Troubleshooting](docs/TROUBLESHOOTING.md) | Common issues and gotchas, along with known gaps/caveats |
+| [Legacy Instructions](https://gist.github.com/rosmur/84f0a77404bd901263de26566ab06f08) | Previous version |
+
+## Glossary
+
+- **QAT**: Quantization aware training - means the model was *trained* to survive being compressed, so it loses less quality than ordinary compression would cost.
+- **MoE**: Mixture of Experts

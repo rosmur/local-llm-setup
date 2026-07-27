@@ -2,7 +2,7 @@
 
 This repo contains scripts and resources to setup local LLMs and AI. *It is geared towards a broad audience - any one who knows how to use a computer through to a SWE.*
 
-**Use AI freely - Your terms, your rules, no account, no API key, no subscription, and none of your informationis sent to anybody else's computers.**
+**Use open source AI freely - Your terms, your rules, no account, no API key, no subscription, and none of your informationis sent to anybody else's computers.**
 
 ## Table of Contents <!-- omit from toc -->
 
@@ -30,7 +30,7 @@ To run the script, there are two options:
 bash -c "$(curl -fsSL https://raw.githubusercontent.com/rosmur/local-llm-setup/main/setup-local-pi.sh)"
 ```
 
-1. Or download the script first and then run it: <https://github.com/rosmur/local-llm-setup/blob/main/setup-local-pi.sh>. And then run it by typing:
+1. Or download the setup-local-ai script first from [here](https://github.com/rosmur/local-llm-setup/blob/main/setup-local-pi.sh). And then run it by typing:
 
 ```bash
 bash Downloads/setup-local-pi.sh

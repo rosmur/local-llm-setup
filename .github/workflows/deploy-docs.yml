@@ -57,18 +57,18 @@ jobs:
         id: deployment
         uses: actions/deploy-pages@v4
 
-  # Deploy preview — only on pull requests
+  # Preview — only on pull requests: verify the site builds and make it downloadable
   preview:
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     needs: build
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - name: Deploy preview to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
-        with:
-          artifact_name: github-pages-pr-${{ github.event.number }}
-          preview: true
+      - name: Summarize preview
+        run: |
+          echo "## MkDocs Preview" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "The documentation site built successfully! To preview it locally:" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "1. Download the **github-pages-pr-${{ github.event.number }}** artifact from this run's summary page" >> $GITHUB_STEP_SUMMARY
+          echo "2. Extract the archive" >> $GITHUB_STEP_SUMMARY
+          echo "3. Open \`index.html\` in your browser" >> $GITHUB_STEP_SUMMARY

@@ -1,3 +1,6 @@
+# Install Python dependencies (MkDocs theme, etc.)
+pip install --break-system-packages --user -r requirements.txt
+
 # Setup pi
 
 curl -fsSL https://pi.dev/install.sh | sh

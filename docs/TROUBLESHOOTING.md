@@ -1,4 +1,9 @@
-## Troubleshooting
+---
+title: Troubleshooting
+description: Common issues with local LLM setup — command not found, missing models, memory errors, slow responses, and known caveats.
+---
+
+# Troubleshooting
 
 | Symptom | Cause and fix |
 |---|---|

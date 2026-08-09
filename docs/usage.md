@@ -1,3 +1,8 @@
+---
+title: Usage
+description: How to start the local LLM engine and use the pi coding assistant — two terminal windows, one command each.
+---
+
 # Usage
 
 You need **two terminal windows**, because the engine has to keep running while you work.

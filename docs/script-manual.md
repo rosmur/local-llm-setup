@@ -1,5 +1,19 @@
+---
+title: Manual Installation
+description: Step-by-step terminal commands to install Homebrew, llama.cpp, models, and pi manually without the setup script.
+---
 
-## 6. Step-by-step, with the actual commands
+# Manual Installation
+
+Manual installation is recommended if you:
+
+- Are familiar with the terminal, bash, config files, etc.
+- Wish to install only a subset of items
+- Want modifications not supported by the script, like alternate models or Docker usage
+
+Below is every command the setup script runs, explained step by step.
+
+## Step-by-step, with the actual commands
 
 **Step 1 — Homebrew.** Checks for `brew` on `PATH`, then probes `/opt/homebrew/bin/brew` and `/usr/local/bin/brew` directly, because Homebrew can be installed without being on the current shell's `PATH`. If genuinely absent, and only with your consent:
 
@@ -105,7 +119,7 @@ The merge is a real merge, not an overwrite: existing providers survive, and re-
 
 The dummy `apiKey` is not vestigial. `pi` treats a model as unavailable until some credential exists for its provider, even for a keyless local server, so a placeholder is required for the model to appear in the `/model` picker.
 
-## 7. Notes on the third-party installer
+## Notes on the third-party installer
 
 Step 4 pipes a remote script into a shell. That deserves scrutiny, so here is what `pi.dev/install.sh` does, from reading it:
 

@@ -1,3 +1,8 @@
+---
+title: Model Choices
+description: The three open-weight models offered by the setup script — Gemma 4 E4B, Gemma 4 26B, and Qwen3.5 35B — and how to pick one.
+---
+
 # Model Choices
 
 Step 3 of the setup script offers three options. All are free and open-weight. These are the best overall models *targeted for RAM <32 GB* available as of July 2026 with relatively large user validation and maturity.

@@ -1,12 +1,21 @@
-# Local LLM Setup — Mac Edition
+---
+title: Home
+description: Run local LLMs on your Mac — fully offline, no account, no API key. One curl command sets everything up.
+---
 
-This repo contains scripts and resources to setup local LLMs and AI. It is geared towards a broad audience — anyone who knows how to use a computer through to a SWE.
+# Local LLM Setup — Mac Edition
 
 **Use AI freely — Your terms, your rules, no account, no API key, no subscription, and none of your information is sent to anybody else's computers.**
 
-## Reading Guide
+## Quick Install
 
-Sections 1–5 are for everyone and assume no technical background. Sections 6–8 are the detail an engineer would want before running this on their machine. You do not need the second half to use the script.
+Run this in your terminal:
+
+```bash
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/rosmur/local-llm-setup/main/setup-local-pi.sh)"
+```
+
+The script prompts you before every change, detects work already done, and is safe to re-run.
 
 ## What this sets up
 
@@ -18,8 +27,6 @@ Four pieces, installed in order, each one needed by the next:
 | **llama.cpp** | Software that runs AI models on your own hardware |
 | **A model** | The AI itself — a multi-gigabyte file you choose from a menu |
 | **pi** | A coding assistant that lives in your terminal |
-
-This arrangement is minimal. `llama.cpp` runs a small local web server on your machine that speaks the same language as commercial AI services (OpenAI API compatible). `pi` is then pointed at that local server instead of at the internet. `pi` never knows the difference — and neither does your data, which never leaves the machine.
 
 ```mermaid
 flowchart TD
@@ -33,8 +40,4 @@ flowchart TD
     Server --> AIModel
 ```
 
-## Getting Started
-
-👉 [**Quick Start →**](quick-start.md)
-
-Run a single script and you're done. Everything is automated, prompts you before making changes, and is safe to re-run.
+👉 [**Full documentation →**](quick-start.md)

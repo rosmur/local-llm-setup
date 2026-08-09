@@ -1,3 +1,8 @@
+---
+title: Quick Start
+description: Run a single command to install everything — Homebrew, llama.cpp, a model, and the pi coding assistant.
+---
+
 # Quick Start
 
 The easiest method is to run the setup script that sets up everything for you.

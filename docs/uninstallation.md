@@ -1,3 +1,8 @@
+---
+title: Uninstallation
+description: Commands to remove everything the setup script installed — pi, llama.cpp, models, and config.
+---
+
 # Uninstallation
 
 Run the following commands to uninstall/remove everything that was set up:

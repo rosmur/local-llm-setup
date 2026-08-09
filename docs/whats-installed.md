@@ -1,3 +1,8 @@
+---
+title: What's Installed
+description: The four pieces the setup script installs — Homebrew, llama.cpp, a model, and pi — and where they live on your Mac.
+---
+
 # What's installed
 
 Four pieces, installed in order, each one needed by the next:

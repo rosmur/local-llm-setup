@@ -1,3 +1,8 @@
+---
+title: Requirements
+description: What you need before running the setup — a Mac, disk space, RAM, patience, and an internet connection for the download.
+---
+
 # Requirements
 
 - **A Mac.** The script refuses to run on anything else.

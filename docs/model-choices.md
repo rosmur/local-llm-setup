@@ -15,6 +15,6 @@ Step 3 of the setup script offers three options. All are free and open-weight. T
 
 If you pick wrong, nothing is lost. Re-run the script and choose a different one; both models stay cached on disk and the script will simply point `pi` at whichever you chose most recently.
 
-!!! tip "Exploring other models"
-
-    If you wish to use a more powerful model (if you have more RAM) or just want to explore, there are literally 1000s of options available. The best place to find them is [huggingface.co](https://huggingface.co).
+::: callout tip "Exploring other models"
+If you wish to use a more powerful model (if you have more RAM) or just want to explore, there are literally 1000s of options available. The best place to find them is [huggingface.co](https://huggingface.co).
+:::

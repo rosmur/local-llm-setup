@@ -27,12 +27,12 @@ bash Downloads/setup-local-pi.sh
 
 The script is written to be readable and to ask before it does anything. Every step explains what it is about to do, shows the exact command, and waits for you to type `y`. Typing anything else skips that step. `Ctrl-C` quits at any point.
 
-!!! note
-
-    - Written by AI
-    - Tested and verified operation on MacBook Pro M1 (Sequoia)
-    - Reviewed by human
-    - **Re-running the script is always safe.** Every step detects work that is already done and skips it. An interrupted run — a dropped connection, a closed laptop lid — is recovered by just starting again. The menu marks which models you already have, and nothing is downloaded twice.
+::: callout note
+- Written by AI
+- Tested and verified operation on MacBook Pro M1 (Sequoia)
+- Reviewed by human
+- **Re-running the script is always safe.** Every step detects work that is already done and skips it. An interrupted run — a dropped connection, a closed laptop lid — is recovered by just starting again. The menu marks which models you already have, and nothing is downloaded twice.
+:::
 
 ## What happens step by step
 

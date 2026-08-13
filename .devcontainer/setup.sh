@@ -1,5 +1,7 @@
-# Install Python dependencies (MkDocs theme, etc.)
-pip install --break-system-packages --user -r requirements.txt
+# Install docmd dependencies (docs are built with docmd, a Node.js tool)
+if [ -f package.json ]; then
+  npm install
+fi
 
 # Setup pi
 

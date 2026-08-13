@@ -32,6 +32,6 @@ Inside `pi`, press **Ctrl+L** (or type `/model`) and select your local model fro
 
 Close window 2, then press `Ctrl-C` in window 1 to shut the engine down and free up your memory.
 
-!!! warning "A word of caution about coding assistants generally"
-
-    `pi` can read your files, write to them, and run commands on your Mac. That is what makes it useful, and it is also a real risk — a confused model can delete or overwrite things. Use it in folders tracked by version control (`git`), so any mistake can be undone. This applies to every tool of this kind, not just this one.
+::: callout warning "A word of caution about coding assistants generally"
+`pi` can read your files, write to them, and run commands on your Mac. That is what makes it useful, and it is also a real risk — a confused model can delete or overwrite things. Use it in folders tracked by version control (`git`), so any mistake can be undone. This applies to every tool of this kind, not just this one.
+:::

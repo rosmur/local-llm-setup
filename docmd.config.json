@@ -1,0 +1,76 @@
+{
+  "title": "Local LLM Setup",
+  "url": "https://rosmur.github.io/local-llm-setup/",
+  "src": "docs",
+  "out": "site",
+  "engine": "js",
+  "minify": true,
+  "autoTitleFromH1": true,
+  "copyCode": true,
+  "pageNavigation": true,
+  "theme": {
+    "name": "default",
+    "appearance": "system",
+    "codeHighlight": true
+  },
+  "layout": {
+    "spa": true,
+    "header": {
+      "enabled": true
+    },
+    "sidebar": {
+      "collapsible": true,
+      "defaultCollapsed": false
+    },
+    "optionsMenu": {
+      "position": "sidebar-top",
+      "components": {
+        "search": true,
+        "themeSwitch": true
+      }
+    }
+  },
+  "navigation": [
+    { "title": "Home", "path": "/" },
+    {
+      "title": "Getting Started",
+      "children": [
+        { "title": "Quick Start", "path": "/quick-start/" },
+        { "title": "Requirements", "path": "/requirements/" },
+        { "title": "Model Choices", "path": "/model-choices/" }
+      ]
+    },
+    {
+      "title": "Using the Setup",
+      "children": [
+        { "title": "What's Installed", "path": "/whats-installed/" },
+        { "title": "Usage", "path": "/usage/" },
+        { "title": "Uninstallation", "path": "/uninstallation/" }
+      ]
+    },
+    {
+      "title": "Reference",
+      "children": [
+        { "title": "Manual Installation", "path": "/script-manual/" },
+        { "title": "Troubleshooting", "path": "/troubleshooting/" },
+        { "title": "Glossary", "path": "/glossary/" }
+      ]
+    },
+    {
+      "title": "GitHub",
+      "href": "https://github.com/rosmur/local-llm-setup",
+      "external": true
+    }
+  ],
+  "plugins": {
+    "search": {},
+    "mermaid": {},
+    "git": {
+      "repo": "https://github.com/rosmur/local-llm-setup"
+    },
+    "seo": {
+      "defaultDescription": "Setup scripts and documentation for running local LLMs on Mac — no account, no API key, no subscription, fully offline."
+    },
+    "llms": {}
+  }
+}

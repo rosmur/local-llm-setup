@@ -1,6 +1,6 @@
 # Local LLM Setup — Mac Edition
 
-[![Documentation](https://img.shields.io/badge/docs-mkdocs-blue?style=flat-square)](https://rosmur.github.io/local-llm-setup/)
+[![Documentation](https://img.shields.io/badge/docs-docmd-blue?style=flat-square)](https://rosmur.github.io/local-llm-setup/)
 
 This repo contains scripts and resources to set up local LLMs and AI on a Mac.
 
@@ -55,7 +55,7 @@ Full documentation is available at **[https://rosmur.github.io/local-llm-setup/]
 
 ```
 ├── setup-local-pi.sh       # The setup script — run this
-├── docs/                   # MkDocs documentation source
+├── docs/                   # docmd documentation source
 │   ├── index.md
 │   ├── quick-start.md
 │   ├── whats-installed.md
@@ -66,10 +66,11 @@ Full documentation is available at **[https://rosmur.github.io/local-llm-setup/]
 │   ├── script-manual.md
 │   ├── TROUBLESHOOTING.md
 │   └── glossary.md
+├── docmd.config.json      # docmd site configuration
+├── package.json           # Node dependencies + scripts (dev/build/validate)
 ├── .github/
 │   └── workflows/
 │       └── deploy-docs.yml # GitHub Pages deployment
-└── mkdocs.yml              # MkDocs configuration
 ```
 
 ---

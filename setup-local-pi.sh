@@ -1,8 +1,10 @@
 #!/bin/bash
-# setup-local-pi.sh — interactive macOS setup for a local coding agent:
-#   Homebrew -> llama.cpp -> GGUF model -> pi coding agent -> pi models.json
+# setup-local-pi.sh — interactive setup for a local coding agent:
+#   llama.cpp -> GGUF model -> pi coding agent -> connect to local model
 #
 # Nothing is installed or changed without an explicit "y" from you.
+#   macOS:            Homebrew or the official direct installer
+#   Linux / Windows:  official direct installers only (no Homebrew)
 
 set -u
 set -o pipefail
@@ -23,74 +25,103 @@ ask() {
   read -r reply </dev/tty || reply=""
   case "$reply" in [yY]|[yY][eE][sS]) return 0 ;; *) return 1 ;; esac
 }
+# ask_y "question" -> returns 0 for yes, 1 for no. Defaults to yes on empty input.
+ask_y() {
+  local q="$1" reply
+  printf '\n%s [Y/n] ' "${BOLD}${q}${RST}"
+  read -r reply </dev/tty || reply=""
+  case "$reply" in [nN]|[nN][oO]) return 1 ;; *) return 0 ;; esac
+}
 
-require_macos() {
-  [ "$(uname -s)" = "Darwin" ] || die "This script is for macOS only."
+# --- OS detection -----------------------------------------------------------
+detect_os() {
+  case "$(uname -s)" in
+    Darwin)               OS="macos" ;;
+    Linux)                OS="linux" ;;
+    MINGW*|MSYS*|CYGWIN*) OS="windows" ;;
+    *) die "Unsupported OS: $(uname -s). Supported: macOS, Linux, Windows." ;;
+  esac
+}
+
+# system_ram_gb -> total RAM in GB, or empty if it can't be determined.
+system_ram_gb() {
+  case "$OS" in
+    macos)   sysctl -n hw.memsize 2>/dev/null ;;
+    linux)   awk '/MemTotal/{print $2*1024}' /proc/meminfo 2>/dev/null ;;
+    windows) return ;;
+  esac | awk '{printf "%.0f", $1/1073741824}'
 }
 
 # ---------------------------------------------------------------------------
 say "${BOLD}Local coding agent setup${RST}"
 say "This script will walk through four steps and ask permission before each one:"
-say "  1. Homebrew        — the package manager macOS doesn't ship with"
-say "  2. llama.cpp       — runs AI models on your own Mac (gives you 'llama-server')"
-say "  3. a model         — you pick one; it's a multi-GB download from Hugging Face"
-say "  4. pi              — a terminal coding agent, pointed at your local model"
-say "                       (via its own installer, which also handles Node.js for you)"
+say "  1. llama.cpp       — runs AI models on your machine (gives you 'llama')"
+say "  2. a model         — you pick one; it's a multi-GB download from Hugging Face"
+say "  3. pi              — a terminal coding agent"
+say "  4. connect         — launcher script + pi models.json"
 say ""
 say "${DIM}Nothing runs until you type 'y'. Ctrl-C quits at any time.${RST}"
 
-require_macos
+detect_os
+say ""
+info "Detected OS: $OS"
 
-# --- Step 1: Homebrew -------------------------------------------------------
-head_ "Step 1 of 4: Homebrew"
+# --- Step 1: llama.cpp ------------------------------------------------------
+head_ "Step 1 of 4: llama.cpp"
 
-if ! command -v brew >/dev/null 2>&1; then
-  # brew may be installed but not yet on PATH in this shell
-  for p in /opt/homebrew/bin/brew /usr/local/bin/brew; do
-    [ -x "$p" ] && eval "$("$p" shellenv)" && break
-  done
-fi
-
-if command -v brew >/dev/null 2>&1; then
-  ok "Homebrew is already installed ($(brew --version | head -n1))."
-else
-  say "Homebrew was not found."
-  info "It installs to /opt/homebrew (Apple Silicon) or /usr/local (Intel)."
-  info "The installer is run with sudo and will ask for your Mac password."
-  info "Command: /bin/bash -c \"\$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)\""
-  if ask "Install Homebrew now?"; then
-    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" \
-      || die "Homebrew install failed."
-    for p in /opt/homebrew/bin/brew /usr/local/bin/brew; do
-      [ -x "$p" ] && eval "$("$p" shellenv)" && break
-    done
-    command -v brew >/dev/null 2>&1 || die "Homebrew installed but 'brew' is not on PATH. Open a new terminal and re-run this script."
-    ok "Homebrew installed."
-  else
-    die "Homebrew is required for the rest of this script. Nothing was changed."
-  fi
-fi
-
-# --- Step 2: llama.cpp ------------------------------------------------------
-head_ "Step 2 of 4: llama.cpp"
-
-if command -v llama-server >/dev/null 2>&1; then
-  ok "llama-server is already installed ($(llama-server --version 2>&1 | head -n1))."
-else
-  say "llama.cpp was not found."
-  info "The Homebrew formula is named 'llama.cpp'; it installs 'llama-cli' and 'llama-server'."
-  info "llama-server exposes an OpenAI-compatible API on your machine — that's what pi talks to."
-  info "Command: brew install llama.cpp"
-  if ask "Install llama.cpp now?"; then
-    brew install llama.cpp || die "brew install llama.cpp failed."
+# install_llama_direct — the official cross-platform installer (no Homebrew).
+install_llama_direct() {
+  info "Command: curl -LsSf https://llama.app/install.sh | sh"
+  if ask "Install llama.cpp with the official direct installer?"; then
+    curl -LsSf https://llama.app/install.sh | sh || die "llama.cpp direct install failed."
+    if ! command -v llama >/dev/null 2>&1; then
+      for d in "$HOME/.local/bin" "$HOME/bin"; do
+        [ -x "$d/llama" ] && PATH="$d:$PATH" && export PATH && break
+      done
+    fi
+    command -v llama >/dev/null 2>&1 || die "llama installed but 'llama' is not on PATH. Open a new terminal and re-run this script."
     ok "llama.cpp installed."
   else
-    die "llama.cpp is required. Nothing further was changed."
+    die "llama.cpp is required. Nothing was changed."
+  fi
+}
+
+if command -v llama >/dev/null 2>&1; then
+  ok "llama is already installed ($(llama --version 2>&1 | head -n1))."
+else
+  say "llama.cpp was not found."
+
+  if [ "$OS" = "macos" ]; then
+    # Homebrew may be installed but not yet on PATH in this shell
+    if ! command -v brew >/dev/null 2>&1; then
+      for p in /opt/homebrew/bin/brew /usr/local/bin/brew; do
+        [ -x "$p" ] && eval "$("$p" shellenv)" && break
+      done
+    fi
+
+    if command -v brew >/dev/null 2>&1; then
+      say "Homebrew is installed, so you can install llama.cpp two ways:"
+      info "  1) Homebrew (default):  brew install llama.cpp"
+      info "  2) Direct installer:    curl -LsSf https://llama.app/install.sh | sh"
+      if ask_y "Install llama.cpp via Homebrew? (n = use the direct installer instead)"; then
+        brew install llama.cpp || die "brew install llama.cpp failed."
+        command -v llama >/dev/null 2>&1 || die "llama installed but not on PATH. Open a new terminal and re-run this script."
+        ok "llama.cpp installed via Homebrew."
+      else
+        install_llama_direct
+      fi
+    else
+      say "Homebrew is not installed, so we'll use llama.cpp's official direct installer."
+      install_llama_direct
+    fi
+  else
+    say "On $OS we use llama.cpp's official direct installer (no Homebrew)."
+    install_llama_direct
   fi
 fi
 
-# --- Step 3: pick and download a model --------------------------------------
-head_ "Step 3 of 4: choose a model"
+# --- Step 2: pick and download a model --------------------------------------
+head_ "Step 2 of 4: choose a model"
 
 # Where llama.cpp keeps downloaded weights. Recent builds use the standard
 # Hugging Face hub cache; older ones used their own directory. Both are checked,
@@ -143,26 +174,26 @@ status_line() {
 
 # Download the weights WITHOUT dropping the user into an interactive chat.
 #
-# llama-cli auto-enables conversation mode whenever the model ships a chat
+# llama cli auto-enables conversation mode whenever the model ships a chat
 # template, which every model offered here does. -no-cnv is supposed to suppress
 # that but is unreliable across builds, so three independent guards are used:
 #   -st / --single-turn  documented to be non-interactive when -p is supplied
 #   -no-cnv              legacy flag, still honoured by most builds
 #   < /dev/null          the backstop: any prompt that appears gets EOF and exits
-# Flags are probed against --help first so an older or newer llama-cli never
+# Flags are probed against --help first so an older or newer llama never
 # aborts with "unknown argument".
 fetch_model() {
   fm_repo="$1"
-  fm_help=$(llama-cli --help 2>&1 || true)
+  fm_help=$(llama cli --help 2>&1 || true)
   fm_flags="-n 1"
   case "$fm_help" in *-no-cnv*)       fm_flags="$fm_flags -no-cnv" ;; esac
   case "$fm_help" in *--single-turn*) fm_flags="$fm_flags -st" ;; esac
   case "$fm_help" in *--no-warmup*)   fm_flags="$fm_flags --no-warmup" ;; esac
 
-  info "Running: llama-cli -hf $fm_repo -p ok $fm_flags < /dev/null"
+  info "Running: llama cli -hf $fm_repo -p ok $fm_flags < /dev/null"
   # stdout is discarded (the single generated token); stderr is kept so the
   # download progress bar stays visible.
-  llama-cli -hf "$fm_repo" -p "ok" $fm_flags </dev/null >/dev/null
+  llama cli -hf "$fm_repo" -p "ok" $fm_flags </dev/null >/dev/null
 }
 
 say "Checking which models you already have..."
@@ -182,7 +213,10 @@ say "     unsloth/gemma-4-26B-A4B-it-qat-GGUF:UD-Q4_K_XL"
 say "  ${BOLD}3)${RST} Qwen3.5 35B-A3B (Q4_K_M)       MoE, 3B active, strong at code     ${S3}"
 say "     unsloth/Qwen3.5-35B-A3B-GGUF:Q4_K_M"
 say ""
-info "Your Mac reports $(( $(sysctl -n hw.memsize) / 1073741824 )) GB of RAM."
+RAM_GB=$(system_ram_gb)
+if [ -n "$RAM_GB" ]; then
+  info "Your machine reports $RAM_GB GB of RAM."
+fi
 if [ -n "$CACHE_ROOTS" ]; then
   info "Cache directories searched:$CACHE_ROOTS"
 else
@@ -223,20 +257,20 @@ else
   info "drop you into a chat session, and needs no input from you while it runs."
   info "It can take a long time. The exact command is printed below."
   info "If it is interrupted, re-run this script — it resumes rather than starting over."
-  if ask "Download the model now? (Say n to skip — llama-server will fetch it on first run.)"; then
+  if ask "Download the model now? (Say n to skip — 'llama serve' will fetch it on first run.)"; then
     fetch_model "$MODEL_REPO" || die "Model download failed."
     ok "Model downloaded and cached."
   else
-    warn "Skipped. The first 'llama-server' run will download it."
+    warn "Skipped. The first 'llama serve' run will download it."
   fi
 fi
 
-# --- Step 4a: pi ------------------------------------------------------------
-head_ "Step 4 of 4: pi coding agent"
+# --- Step 3: pi -------------------------------------------------------------
+head_ "Step 3 of 4: pi coding agent"
 
 # pi's installer handles Node.js itself: it requires Node >= 22.19.0 and, if that
-# is missing, offers to install it via Homebrew (which now exists thanks to step 1)
-# or as a checksum-verified standalone build under ~/.local/share/pi-node.
+# is missing, offers to install a compatible Node (via Homebrew on macOS, or a
+# checksum-verified standalone build under ~/.local/share/pi-node elsewhere).
 # So there is no separate Node step here -- just a heads-up if yours is too old.
 if command -v node >/dev/null 2>&1; then
   NODE_V=$(node --version)
@@ -244,10 +278,10 @@ if command -v node >/dev/null 2>&1; then
     ok "Node.js $NODE_V meets pi's requirement (>= 22.19.0)."
   else
     warn "Node.js $NODE_V is older than pi's minimum of 22.19.0."
-    info "pi's installer will offer to upgrade it via Homebrew. Accept that prompt."
+    info "pi's installer will offer to upgrade it. Accept that prompt."
   fi
 else
-  info "Node.js is not installed. pi's installer will offer to install it via Homebrew."
+  info "Node.js is not installed. pi's installer will offer to install it."
 fi
 
 if command -v pi >/dev/null 2>&1; then
@@ -261,7 +295,7 @@ else
   info "command it will run, and asks y / n (and 'u' to uninstall) before doing anything."
   info "It installs to npm's global prefix if writable, otherwise to ~/.local, and will"
   info "offer to add that bin directory to your shell profile."
-  info "You are trusting the pi.dev server to serve an honest script, same as Homebrew."
+  info "You are trusting the pi.dev server to serve an honest script, same as the other installers."
   info "To read it first, in another window:  curl -fsSL https://pi.dev/install.sh | less"
   if ask "Run pi's installer now?"; then
     # The installer reads its own prompts from /dev/tty, so piping to sh is safe.
@@ -288,18 +322,21 @@ else
   fi
 fi
 
-# --- Step 4c: launcher script ----------------------------------------------
+# --- Step 4: connect pi to the local model -----------------------------------
+head_ "Step 4 of 4: connect pi to your local model"
+
+# --- Step 4a: launcher script ----------------------------------------------
 LAUNCHER="$HOME/bin/llama-serve-${MODEL_ALIAS}.sh"
 mkdir -p "$HOME/bin"
 say ""
-say "Next, a small launcher script that starts llama-server with your model."
+say "Next, a small launcher script that starts llama with your model."
 info "It will be written to: $LAUNCHER"
 info "The --alias flag pins the model's API name to '${MODEL_ALIAS}' so pi's config always matches."
 if ask "Write the launcher script?"; then
   cat > "$LAUNCHER" <<EOF
 #!/bin/bash
-# Starts llama-server for ${MODEL_LABEL}. Leave this running while you use pi.
-exec llama-server \\
+# Starts llama for ${MODEL_LABEL}. Leave this running while you use pi.
+exec llama serve \\
   -hf ${MODEL_REPO} \\
   --alias ${MODEL_ALIAS} \\
   --host 127.0.0.1 --port 8080 \\
@@ -314,7 +351,7 @@ else
   warn "Skipped launcher script."
 fi
 
-# --- Step 4d: pi models.json -----------------------------------------------
+# --- Step 4b: pi models.json -----------------------------------------------
 PI_DIR="$HOME/.pi/agent"
 PI_MODELS="$PI_DIR/models.json"
 mkdir -p "$PI_DIR"

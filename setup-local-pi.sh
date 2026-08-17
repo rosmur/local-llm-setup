@@ -58,7 +58,7 @@ say "This script will walk through four steps and ask permission before each one
 say "  1. llama.cpp       — runs AI models on your machine (gives you 'llama')"
 say "  2. a model         — you pick one; it's a multi-GB download from Hugging Face"
 say "  3. pi              — a terminal coding agent"
-say "  4. connect         — launcher script + pi models.json"
+say "  4. connect         — pi-llama plugin so pi auto-discovers your model"
 say ""
 say "${DIM}Nothing runs until you type 'y'. Ctrl-C quits at any time.${RST}"
 
@@ -315,7 +315,7 @@ else
       warn "pi was not found afterwards."
       info "Either you chose 'n' (do nothing) at the installer's menu, or pi landed in a"
       info "directory this shell does not search. Check with: ls ~/.local/bin/pi"
-      info "The remaining steps still run; they only write config files."
+      info "The remaining step (pi-llama plugin) needs pi, so it will be skipped too."
     fi
   else
     warn "Skipped. llama.cpp and the model are still set up; you can install pi later."
@@ -325,133 +325,42 @@ fi
 # --- Step 4: connect pi to the local model -----------------------------------
 head_ "Step 4 of 4: connect pi to your local model"
 
-# --- Step 4a: launcher script ----------------------------------------------
-LAUNCHER="$HOME/bin/llama-serve-${MODEL_ALIAS}.sh"
-mkdir -p "$HOME/bin"
-say ""
-say "Next, a small launcher script that starts llama with your model."
-info "It will be written to: $LAUNCHER"
-info "The --alias flag pins the model's API name to '${MODEL_ALIAS}' so pi's config always matches."
-if ask "Write the launcher script?"; then
-  cat > "$LAUNCHER" <<EOF
-#!/bin/bash
-# Starts llama for ${MODEL_LABEL}. Leave this running while you use pi.
-exec llama serve \\
-  -hf ${MODEL_REPO} \\
-  --alias ${MODEL_ALIAS} \\
-  --host 127.0.0.1 --port 8080 \\
-  -ngl 99 \\
-  -c ${MODEL_CTX} \\
-  -fa on \\
-  --jinja
-EOF
-  chmod +x "$LAUNCHER"
-  ok "Wrote $LAUNCHER"
+# Step 4a: pi-llama plugin. Replaces the old models.json approach — pi
+# auto-discovers the local model served by 'llama serve'. No manual config.
+if command -v pi >/dev/null 2>&1; then
+  say ""
+  say "Install the pi-llama plugin so pi auto-discovers your local model."
+  info "Command: pi install git:github.com/huggingface/pi-llama"
+  info "This replaces the old models.json approach — no manual config file is needed."
+  if ask "Install the pi-llama plugin now?"; then
+    if pi install git:github.com/huggingface/pi-llama; then
+      ok "pi-llama plugin installed."
+    else
+      warn "Plugin install reported an error. Run it again later with: pi install git:github.com/huggingface/pi-llama"
+    fi
+  else
+    warn "Skipped. Run it later with: pi install git:github.com/huggingface/pi-llama"
+  fi
 else
-  warn "Skipped launcher script."
+  warn "pi is not installed, so the plugin can't be added here."
+  info "Install pi first, then run: pi install git:github.com/huggingface/pi-llama"
 fi
 
-# --- Step 4b: pi models.json -----------------------------------------------
-PI_DIR="$HOME/.pi/agent"
-PI_MODELS="$PI_DIR/models.json"
-mkdir -p "$PI_DIR"
-
+# Step 4b: llama serve. There's no launcher script anymore — just the minimal
+# command, run in its own terminal and left running.
 say ""
-say "Finally, register the local server with pi."
-info "File: $PI_MODELS"
-info "This adds a provider 'llama-cpp' at http://localhost:8080/v1 with model id '${MODEL_ALIAS}'."
-info "Existing providers and models in that file are preserved; a .bak backup is made."
-if ask "Update pi's models.json?"; then
-  [ -f "$PI_MODELS" ] && cp "$PI_MODELS" "${PI_MODELS}.bak.$(date +%Y%m%d%H%M%S)" && info "Backup created."
-
-  if command -v node >/dev/null 2>&1; then
-    MERGE_CMD="node -e"
-  elif command -v python3 >/dev/null 2>&1; then
-    MERGE_CMD="python3 -c"
-  else
-    die "Need node or python3 to safely merge JSON. Neither was found."
-  fi
-
-  if [ "$MERGE_CMD" = "node -e" ]; then
-  MODEL_ALIAS="$MODEL_ALIAS" MODEL_LABEL="$MODEL_LABEL" MODEL_CTX="$MODEL_CTX" PI_MODELS="$PI_MODELS" \
-  node -e '
-    const fs = require("fs");
-    const path = process.env.PI_MODELS;
-    let cfg = {};
-    if (fs.existsSync(path)) {
-      try { cfg = JSON.parse(fs.readFileSync(path, "utf8")); }
-      catch (e) { console.error("Existing models.json is not valid JSON: " + e.message); process.exit(1); }
-    }
-    cfg.providers = cfg.providers || {};
-    const p = cfg.providers["llama-cpp"] || {};
-    p.baseUrl = "http://localhost:8080/v1";
-    p.api     = "openai-completions";
-    p.apiKey  = p.apiKey || "none";
-    p.models  = Array.isArray(p.models) ? p.models : [];
-    const entry = {
-      id: process.env.MODEL_ALIAS,
-      name: process.env.MODEL_LABEL + " (local)",
-      contextWindow: Number(process.env.MODEL_CTX),
-      maxTokens: 8192,
-      cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 }
-    };
-    const i = p.models.findIndex(m => m && m.id === entry.id);
-    if (i >= 0) p.models[i] = entry; else p.models.push(entry);
-    cfg.providers["llama-cpp"] = p;
-    fs.writeFileSync(path, JSON.stringify(cfg, null, 2) + "\n");
-  ' || die "Failed to write $PI_MODELS"
-  else
-  MODEL_ALIAS="$MODEL_ALIAS" MODEL_LABEL="$MODEL_LABEL" MODEL_CTX="$MODEL_CTX" PI_MODELS="$PI_MODELS" \
-  python3 -c '
-import json, os, sys
-path = os.environ["PI_MODELS"]
-cfg = {}
-if os.path.exists(path):
-    try:
-        with open(path) as f:
-            cfg = json.load(f)
-    except Exception as e:
-        sys.exit("Existing models.json is not valid JSON: %s" % e)
-cfg.setdefault("providers", {})
-p = cfg["providers"].get("llama-cpp", {})
-p["baseUrl"] = "http://localhost:8080/v1"
-p["api"] = "openai-completions"
-p.setdefault("apiKey", "none")
-if not isinstance(p.get("models"), list):
-    p["models"] = []
-entry = {
-    "id": os.environ["MODEL_ALIAS"],
-    "name": os.environ["MODEL_LABEL"] + " (local)",
-    "contextWindow": int(os.environ["MODEL_CTX"]),
-    "maxTokens": 8192,
-    "cost": {"input": 0, "output": 0, "cacheRead": 0, "cacheWrite": 0},
-}
-for i, m in enumerate(p["models"]):
-    if isinstance(m, dict) and m.get("id") == entry["id"]:
-        p["models"][i] = entry
-        break
-else:
-    p["models"].append(entry)
-cfg["providers"]["llama-cpp"] = p
-with open(path, "w") as f:
-    json.dump(cfg, f, indent=2)
-    f.write("\n")
-' || die "Failed to write $PI_MODELS"
-  fi
-  ok "Updated $PI_MODELS"
-else
-  warn "Skipped. You can add the provider yourself later — see https://pi.dev/docs/latest/models"
-fi
+say "Finally, start your model server."
+info "In a separate terminal, run this and leave it running:"
+info "  llama serve"
+info "'llama serve' starts the local server; pi finds it automatically via the pi-llama plugin."
+info "(The model you chose is already cached, so it starts without re-downloading.)"
 
 # --- Done -------------------------------------------------------------------
 head_ "Done"
 say "To use it, open ${BOLD}two${RST} terminal windows:"
 say ""
-say "  Terminal 1 (leave running):   ${BOLD}${LAUNCHER}${RST}"
+say "  Terminal 1 (leave running):   ${BOLD}llama serve${RST}"
 say "  Terminal 2:                   ${BOLD}cd /your/project && pi${RST}"
 say ""
-say "Inside pi, press ${BOLD}Ctrl+L${RST} or type ${BOLD}/model${RST} and pick '${MODEL_ALIAS}'."
-say ""
-info "If '${MODEL_ALIAS}' does not appear in /model, pi has no saved credential for the"
-info "provider. Run: pi --api-key none   (local servers ignore the key; pi just wants one.)"
-info "Check the server is alive with: curl http://localhost:8080/v1/models"
+info "pi auto-discovers the local model via the pi-llama plugin — no models.json,"
+info "no launcher script, no manual config."

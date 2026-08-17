@@ -31,29 +31,59 @@
     }
   },
   "navigation": [
-    { "title": "Home", "path": "/" },
+    {
+      "title": "Home",
+      "path": "/"
+    },
     {
       "title": "Getting Started",
       "children": [
-        { "title": "Quick Start", "path": "/quick-start/" },
-        { "title": "Requirements", "path": "/requirements/" },
-        { "title": "Model Choices", "path": "/model-choices/" }
+        {
+          "title": "Quick Start",
+          "path": "/quick-start/"
+        },
+        {
+          "title": "Requirements",
+          "path": "/requirements/"
+        },
+        {
+          "title": "Model Choices",
+          "path": "/model-choices/"
+        }
       ]
     },
     {
       "title": "Using the Setup",
       "children": [
-        { "title": "What's Installed", "path": "/whats-installed/" },
-        { "title": "Usage", "path": "/usage/" },
-        { "title": "Uninstallation", "path": "/uninstallation/" }
+        {
+          "title": "What's Installed",
+          "path": "/whats-installed/"
+        },
+        {
+          "title": "Usage",
+          "path": "/usage/"
+        },
+        {
+          "title": "Uninstallation",
+          "path": "/uninstallation/"
+        }
       ]
     },
     {
       "title": "Reference",
       "children": [
-        { "title": "Manual Installation", "path": "/script-manual/" },
-        { "title": "Troubleshooting", "path": "/troubleshooting/" },
-        { "title": "Glossary", "path": "/glossary/" }
+        {
+          "title": "Manual Installation",
+          "path": "/script-manual/"
+        },
+        {
+          "title": "Troubleshooting",
+          "path": "/troubleshooting/"
+        },
+        {
+          "title": "Glossary",
+          "path": "/glossary/"
+        }
       ]
     },
     {

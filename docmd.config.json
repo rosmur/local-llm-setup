@@ -93,6 +93,9 @@
     }
   ],
   "plugins": {
+    "ai": {
+      "enabled": false
+    },
     "search": {},
     "mermaid": {},
     "git": {

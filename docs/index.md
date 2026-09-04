@@ -39,5 +39,3 @@ flowchart TD
     Pi --> Server
     Server --> AIModel
 ```
-
-👉 [**Full documentation →**](quick-start.md)

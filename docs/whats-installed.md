@@ -32,16 +32,38 @@ flowchart TD
 
 ## Exact paths and files
 
-<div class="grid cards" markdown>
-
--   **llama.cpp** — Homebrew (`<brew prefix>/bin/llama-server`, `llama-cli`) on macOS, or the official direct installer (`~/.local/bin`, `~/.local/share/llama.cpp`) elsewhere
--   **Model weights** — `~/.cache/huggingface/hub/`
--   **pi-llama plugin** — managed by pi; no manual config file
--   **pi program** — npm's global prefix, or `~/.local`
--   **Private Node.js** — `~/.local/share/pi-node/` (only if no suitable Node)
--   **Shell profile** — one appended `export PATH=...` line (only after asking you)
-
-</div>
+::: grids
+    ::: grid
+        ::: card "llama.cpp" icon:boxes
+        Homebrew (`<brew prefix>/bin/llama-server`, `llama-cli`) on macOS, or the official direct installer (`~/.local/bin`, `~/.local/share/llama.cpp`) elsewhere.
+        :::
+    :::
+    ::: grid
+        ::: card "Model weights" icon:database
+        `~/.cache/huggingface/hub/`
+        :::
+    :::
+    ::: grid
+        ::: card "pi-llama plugin" icon:plug
+        Managed by pi; no manual config file.
+        :::
+    :::
+    ::: grid
+        ::: card "pi program" icon:terminal
+        npm's global prefix, or `~/.local`.
+        :::
+    :::
+    ::: grid
+        ::: card "Private Node.js" icon:node
+        `~/.local/share/pi-node/` (only if no suitable Node).
+        :::
+    :::
+    ::: grid
+        ::: card "Shell profile" icon:file
+        One appended `export PATH=...` line (only after asking you).
+        :::
+    :::
+:::
 
 ### Not touched
 

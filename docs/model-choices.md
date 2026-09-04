@@ -7,12 +7,11 @@ description: The three open-weight models offered by the setup script — Gemma 
 
 Step 3 of the setup script offers three options plus a **0 (skip)** choice. All are free and open-weight. These are the best overall models *targeted for RAM <32 GB* available as of July 2026 with relatively large user validation and maturity.
 
-|   | Model | Download | Notes |
-|---|---|---|---|
-| **1** | Gemma 4 E4B | ~4.6 GB | The small, fast one. Works on modest machines. A reasonable first choice if you're unsure. |
-| **2** | Gemma 4 26B-A4B (QAT) | ~15 GB | Much more capable, but only activates a small slice of itself per word, so it stays fast. Wants ~24 GB of RAM. |
-| **3** | Qwen3.5 35B-A3B | ~20 GB | Same idea, different family. Strong at code. Wants ~32 GB of RAM. |
-| **0** | Skip | — | Download no model now. Steps 3 and 4 still run, and `llama serve` downloads one on its first run. |
+|   | Model | Download | Recommended RAM | Notes |
+|---|---|---|---|---|
+| **1** | Gemma 4 E4B | ~4.6 GB | 12GB | The small, fast one. Works on modest machines. A reasonable first choice if you're unsure. |
+| **2** | Gemma 4 26B-A4B (QAT) | ~15 GB | 24GB | Much more capable, but only activates a small slice of itself per word, so it stays fast. |
+| **3** | Qwen3.5 35B-A3B | ~20 GB | 32 GB | Same idea, different family. Stronger at code. |
 
 If you pick wrong, nothing is lost. Re-run the script and choose a different one; models stay cached on disk, and `llama serve` uses whichever you chose most recently (or downloads one on first run if you skipped).
 

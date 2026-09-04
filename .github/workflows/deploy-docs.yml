@@ -26,17 +26,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
         with:
-          python-version: '3.x'
+          node-version: '20'
+          cache: npm
 
       - name: Install dependencies
-        run: |
-          pip install -r requirements.txt
+        run: npm ci
 
       - name: Build site
-        run: mkdocs build
+        run: npm run build
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
@@ -65,7 +65,7 @@ jobs:
     steps:
       - name: Summarize preview
         run: |
-          echo "## MkDocs Preview" >> $GITHUB_STEP_SUMMARY
+          echo "## docmd Preview" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "The documentation site built successfully! To preview it locally:" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY

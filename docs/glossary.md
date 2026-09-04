@@ -6,7 +6,7 @@ description: Definitions of technical terms used throughout the documentation �
 # Glossary
 
 **Context window**
-:   The maximum number of tokens (roughly ~¾ of a word in English) the model can consider at once when generating a response. A larger context window lets the model handle longer conversations and larger code files. The default launcher sets this to 32768 (32K tokens).
+:   The maximum number of tokens (roughly ~¾ of a word in English) the model can consider at once when generating a response. A larger context window lets the model handle longer conversations and larger code files. With the current `llama serve` approach the script doesn't set this explicitly; adjust it with `llama serve -c <tokens>` (the older launcher used 32768 / 32K tokens).
 
 **GGUF**
 :   GPT-Generated Unified Format — a file format for storing quantized LLM model weights. It is the format used by `llama.cpp` and supported by most local inference engines. GGUF files bundle the model's weights, tokenizer, and metadata (such as the chat template) into a single file.

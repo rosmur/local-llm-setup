@@ -12,10 +12,10 @@ You need **two terminal windows**, because the engine has to keep running while 
 Start the engine and leave it running:
 
 ```bash
-~/bin/llama-serve-<model-name>.sh
+llama serve
 ```
 
-(The script tells you the exact filename when it finishes.) The first run may pause a while as the model loads into memory.
+The first run may pause a while as the model loads into memory — or, if you chose to skip the download during setup, it downloads the model first and then starts.
 
 ## Window 2 — Start the assistant
 
@@ -26,12 +26,12 @@ cd ~/my-project
 pi
 ```
 
-Inside `pi`, press **Ctrl+L** (or type `/model`) and select your local model from the list.
+The **pi-llama plugin** installed during setup makes pi auto-discover your local model, so it usually appears automatically. If it doesn't, press **Ctrl+L** (or type `/model`) and select your local model from the list.
 
 ## When you're done
 
 Close window 2, then press `Ctrl-C` in window 1 to shut the engine down and free up your memory.
 
-!!! warning "A word of caution about coding assistants generally"
-
-    `pi` can read your files, write to them, and run commands on your Mac. That is what makes it useful, and it is also a real risk — a confused model can delete or overwrite things. Use it in folders tracked by version control (`git`), so any mistake can be undone. This applies to every tool of this kind, not just this one.
+::: callout warning "A word of caution about coding assistants generally"
+`pi` can read your files, write to them, and run commands on your machine. That is what makes it useful, and it is also a real risk — a confused model can delete or overwrite things. Use it in folders tracked by version control (`git`), so any mistake can be undone. This applies to every tool of this kind, not just this one.
+:::

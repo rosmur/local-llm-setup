@@ -1,8 +1,8 @@
-# Local LLM Setup — Mac Edition
+# Local LLM Setup
 
-[![Documentation](https://img.shields.io/badge/docs-mkdocs-blue?style=flat-square)](https://rosmur.github.io/local-llm-setup/)
+[![Documentation](https://img.shields.io/badge/docs-docmd-blue?style=flat-square)](https://rosmur.github.io/local-llm-setup/)
 
-This repo contains scripts and resources to set up local LLMs and AI on a Mac.
+This repo contains scripts and resources to set up local LLMs and AI on macOS, Linux, and Windows.
 
 **Use AI freely — Your terms, your rules, no account, no API key, no subscription, and none of your information is sent to anybody else's computers.**
 
@@ -24,10 +24,10 @@ The script prompts you before every change, detects work already done, and is sa
 
 | Piece | What it is |
 |---|---|
-| **Homebrew** | The package manager that macOS doesn't ship with |
 | **llama.cpp** | The engine that runs AI models on your own hardware |
 | **A model** | The AI itself — pick from a menu of open-weight models |
 | **pi** | A coding assistant that lives in your terminal |
+| **pi-llama plugin** | Connects pi to the model served by `llama serve` automatically |
 
 Everything is free, open-source, and runs fully offline after setup.
 
@@ -55,7 +55,7 @@ Full documentation is available at **[https://rosmur.github.io/local-llm-setup/]
 
 ```
 ├── setup-local-pi.sh       # The setup script — run this
-├── docs/                   # MkDocs documentation source
+├── docs/                   # docmd documentation source
 │   ├── index.md
 │   ├── quick-start.md
 │   ├── whats-installed.md
@@ -66,10 +66,11 @@ Full documentation is available at **[https://rosmur.github.io/local-llm-setup/]
 │   ├── script-manual.md
 │   ├── TROUBLESHOOTING.md
 │   └── glossary.md
+├── docmd.config.json      # docmd site configuration
+├── package.json           # Node dependencies + scripts (dev/build/validate)
 ├── .github/
 │   └── workflows/
 │       └── deploy-docs.yml # GitHub Pages deployment
-└── mkdocs.yml              # MkDocs configuration
 ```
 
 ---

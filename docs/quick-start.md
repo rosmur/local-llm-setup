@@ -36,12 +36,11 @@ The script is written to be readable and to ask before it does anything. Every s
 
 ## What happens step by step
 
-1. **Homebrew** — Installed if missing (with your permission)
-2. **llama.cpp** — Installed via Homebrew
-3. **Model** — You pick from a menu of open-weight models
-4. **pi** — The coding assistant is installed
-5. **Launcher** — A startup script is written to `~/bin/`
-6. **Configuration** — `pi` is pointed at your local server
+1. **llama.cpp** — Installed via Homebrew (macOS) or the official direct installer (macOS, Linux, Windows)
+2. **Model** — You pick from a menu of open-weight models, or type **0** to skip and download later
+3. **pi** — The coding assistant is installed
+4. **pi-llama plugin** — Installed so pi auto-discovers your local model
+5. **llama serve** — You run the model server; no config files, no launcher script
 
 ## After the script finishes
 

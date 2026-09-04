@@ -1,9 +1,9 @@
 ---
 title: Home
-description: Run local LLMs on your Mac — fully offline, no account, no API key. One curl command sets everything up.
+description: Run local LLMs on your machine — fully offline, no account, no API key. One curl command sets everything up.
 ---
 
-# Local LLM Setup — Mac Edition
+# Local LLM Setup
 
 **Use AI freely — Your terms, your rules, no account, no API key, no subscription, and none of your information is sent to anybody else's computers.**
 
@@ -23,10 +23,10 @@ Four pieces, installed in order, each one needed by the next:
 
 | Piece | What it is |
 |---|---|
-| **Homebrew** | A "app store for the command line" that macOS doesn't ship with |
 | **llama.cpp** | Software that runs AI models on your own hardware |
 | **A model** | The AI itself — a multi-gigabyte file you choose from a menu |
 | **pi** | A coding assistant that lives in your terminal |
+| **pi-llama plugin** | Connects pi to the model served by `llama serve` automatically |
 
 ```mermaid
 flowchart TD

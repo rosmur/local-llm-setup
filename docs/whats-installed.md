@@ -1,6 +1,6 @@
 ---
 title: What's Installed
-description: The four pieces the setup script installs — Homebrew, llama.cpp, a model, and pi — and where they live on your Mac.
+description: The pieces the setup script installs — llama.cpp, a model, pi, and the pi-llama plugin — and where they live on your machine.
 ---
 
 # What's installed
@@ -9,10 +9,12 @@ Four pieces, installed in order, each one needed by the next:
 
 | Piece | What it is | Why it's here |
 |---|---|---|
-| **Homebrew** | A "app store for the command line" that macOS doesn't ship with | It's how the next piece gets installed |
 | **llama.cpp** | Software that runs AI models on your own hardware | This is the engine |
 | **A model** | The AI itself — a multi-gigabyte file you choose from a menu | This is the brain |
 | **pi** | A coding assistant that lives in your terminal | This is the part you talk to |
+| **pi-llama plugin** | Connects pi to the model served by `llama serve` | This is the wiring — no manual config needed |
+
+On macOS, llama.cpp is installed via Homebrew (or the official direct installer); on Linux and Windows it uses the official direct installer. There is no separate Homebrew step anymore.
 
 ## How they connect
 
@@ -25,20 +27,18 @@ flowchart TD
 
     User --> Pi
     Pi -- "talks over the local API" --> Server
-    Server -- "points to" --> AIModel
+    Server -- "serves" --> AIModel
 ```
 
 ## Exact paths and files
 
 <div class="grid cards" markdown>
 
--   **Homebrew** — `/opt/homebrew` (Apple Silicon) or `/usr/local` (Intel)
--   **llama.cpp binaries** — `<brew prefix>/bin/llama-server`, `llama-cli`
+-   **llama.cpp** — Homebrew (`<brew prefix>/bin/llama-server`, `llama-cli`) on macOS, or the official direct installer (`~/.local/bin`, `~/.local/share/llama.cpp`) elsewhere
 -   **Model weights** — `~/.cache/huggingface/hub/`
--   **Launcher script** — `~/bin/llama-serve-<alias>.sh`
--   **pi config** — `~/.pi/agent/models.json`
+-   **pi-llama plugin** — managed by pi; no manual config file
 -   **pi program** — npm's global prefix, or `~/.local`
--   **Private Node.js** — `~/.local/share/pi-node/` (only if no Homebrew or suitable Node)
+-   **Private Node.js** — `~/.local/share/pi-node/` (only if no suitable Node)
 -   **Shell profile** — one appended `export PATH=...` line (only after asking you)
 
 </div>

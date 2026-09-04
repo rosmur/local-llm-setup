@@ -99,7 +99,7 @@
       "repo": "https://github.com/rosmur/local-llm-setup"
     },
     "seo": {
-      "defaultDescription": "Setup scripts and documentation for running local LLMs on Mac — no account, no API key, no subscription, fully offline."
+      "defaultDescription": "Setup scripts and documentation for running local LLMs on macOS, Linux, and Windows — no account, no API key, no subscription, fully offline."
     },
     "llms": {}
   }

@@ -162,6 +162,16 @@ find_cached() {
   return 1
 }
 
+# list_any_cached — prints one path per cached model found anywhere, covering
+# both the Hugging Face hub layout (models--org--repo) and the older flat .gguf
+# layout. Lets a re-run report models that are on disk but not in this menu.
+list_any_cached() {
+  for root in $CACHE_ROOTS; do
+    find "$root" -maxdepth 1 -type d -name 'models--*--*' 2>/dev/null
+    find "$root" -maxdepth 4 -type f -iname '*.gguf' 2>/dev/null
+  done | sort -u
+}
+
 # status_line <org> <repo> <glob-fragment> <approx size>
 # Renders either an "already on disk" note or the download size.
 status_line() {
@@ -200,6 +210,7 @@ say "Checking which models you already have..."
 S1=$(status_line "ggml-org" "gemma-4-E4B-it-GGUF"            "gemma-4-E4B"            "4.6 GB")
 S2=$(status_line "unsloth"  "gemma-4-26B-A4B-it-qat-GGUF"    "gemma-4-26B-A4B-it-qat" "15 GB")
 S3=$(status_line "unsloth"  "Qwen3.5-35B-A3B-GGUF"           "Qwen3.5-35B-A3B"        "20 GB")
+ANY_CACHED=$(list_any_cached)
 
 say ""
 say "Models are downloaded from Hugging Face and cached on disk. Re-running this"
@@ -212,6 +223,7 @@ say "  ${BOLD}2)${RST} Gemma 4 26B-A4B QAT            MoE, 4B active — fast fo
 say "     unsloth/gemma-4-26B-A4B-it-qat-GGUF:UD-Q4_K_XL"
 say "  ${BOLD}3)${RST} Qwen3.5 35B-A3B (Q4_K_M)       MoE, 3B active, strong at code     ${S3}"
 say "     unsloth/Qwen3.5-35B-A3B-GGUF:Q4_K_M"
+say "  ${BOLD}0)${RST} Skip the model download — no model now (steps 3 and 4 still run)"
 say ""
 RAM_GB=$(system_ram_gb)
 if [ -n "$RAM_GB" ]; then
@@ -223,10 +235,21 @@ else
   info "No model cache directory exists yet — nothing has been downloaded before."
 fi
 
+# Report any cached models that aren't among the three offered above, so a
+# re-run of this script doesn't silently ignore what's already on disk.
+if [ -n "$ANY_CACHED" ]; then
+  OTHER_CACHED=$(printf '%s\n' "$ANY_CACHED" | grep -viE 'gemma-4-E4B|gemma-4-26B-A4B-it-qat|Qwen3.5-35B-A3B' || true)
+  if [ -n "$OTHER_CACHED" ]; then
+    say ""
+    info "Other models already on disk (not offered above):"
+    printf '%s\n' "$OTHER_CACHED" | while IFS= read -r m; do info "  - ${m##*/}"; done
+  fi
+fi
+
 MODEL_REPO=""; MODEL_ALIAS=""; MODEL_LABEL=""; MODEL_CTX=32768
 MODEL_ORG=""; MODEL_NAME=""; MODEL_FRAG=""
 while [ -z "$MODEL_REPO" ]; do
-  printf '%s' "${BOLD}Choose 1, 2 or 3 (or q to quit): ${RST}"
+  printf '%s' "${BOLD}Choose 1, 2, 3, 0 to skip, or q to quit: ${RST}"
   read -r choice </dev/tty || choice="q"
   case "$choice" in
     1) MODEL_REPO="ggml-org/gemma-4-E4B-it-GGUF:Q4_0";              MODEL_ALIAS="gemma-4-e4b";         MODEL_LABEL="Gemma 4 E4B"
@@ -235,11 +258,16 @@ while [ -z "$MODEL_REPO" ]; do
        MODEL_ORG="unsloth"; MODEL_NAME="gemma-4-26B-A4B-it-qat-GGUF"; MODEL_FRAG="gemma-4-26B-A4B-it-qat" ;;
     3) MODEL_REPO="unsloth/Qwen3.5-35B-A3B-GGUF:Q4_K_M";             MODEL_ALIAS="qwen3.5-35b-a3b";     MODEL_LABEL="Qwen3.5 35B-A3B"
        MODEL_ORG="unsloth"; MODEL_NAME="Qwen3.5-35B-A3B-GGUF";        MODEL_FRAG="Qwen3.5-35B-A3B" ;;
+    0|s|S) MODEL_REPO="SKIP" ;;
     q|Q) say "Nothing downloaded. Exiting."; exit 0 ;;
-    *) warn "Please type 1, 2, 3 or q." ;;
+    *) warn "Please type 1, 2, 3, 0 or q." ;;
   esac
 done
 
+if [ "$MODEL_REPO" = "SKIP" ]; then
+  warn "Model download skipped. No model selected — steps 3 and 4 still run."
+  warn "Add a model later with: llama cli -hf <org/repo>:<quant>"
+else
 say ""
 say "Selected: ${BOLD}${MODEL_LABEL}${RST}  (${MODEL_REPO})"
 
@@ -263,6 +291,7 @@ else
   else
     warn "Skipped. The first 'llama serve' run will download it."
   fi
+fi
 fi
 
 # --- Step 3: pi -------------------------------------------------------------
@@ -353,7 +382,9 @@ say "Finally, start your model server."
 info "In a separate terminal, run this and leave it running:"
 info "  llama serve"
 info "'llama serve' starts the local server; pi finds it automatically via the pi-llama plugin."
-info "(The model you chose is already cached, so it starts without re-downloading.)"
+if [ "$MODEL_REPO" != "SKIP" ]; then
+  info "(The model you chose is already cached, so it starts without re-downloading.)"
+fi
 
 # --- Done -------------------------------------------------------------------
 head_ "Done"

@@ -1,5 +1,5 @@
 #!/bin/bash
-# setup-local-pi.sh — interactive setup for a local coding agent:
+# setup-local-llm.sh — interactive setup for a local coding agent:
 #   llama.cpp -> GGUF model -> pi coding agent -> connect to local model
 #
 # Nothing is installed or changed without an explicit "y" from you.

@@ -1,6 +1,6 @@
 #!/bin/sh
 # Stub `llama` for the smoke tests. Reports "already installed" so
-# setup-local-pi.sh never attempts a real install/download; logs every
+# setup-local-llm.sh never attempts a real install/download; logs every
 # invocation so the test can prove the real binary was never used.
 LOG="${LLAMA_STUB_LOG:-/tmp/llama-stub.log}"
 echo "llama $*" >> "$LOG"

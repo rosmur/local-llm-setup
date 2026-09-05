@@ -12,15 +12,15 @@ The easiest method is to run the setup script that sets up everything for you.
 Copy and paste this into your terminal:
 
 ```bash
-bash -c "$(curl -fsSL https://raw.githubusercontent.com/rosmur/local-llm-setup/main/setup-local-pi.sh)"
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/rosmur/local-llm-setup/main/setup-local-llm.sh)"
 ```
 
 ## Option 2 — Download first
 
-Download the script from [github.com/rosmur/local-llm-setup](https://github.com/rosmur/local-llm-setup/blob/main/setup-local-pi.sh), then run it:
+Download the script from [github.com/rosmur/local-llm-setup](https://github.com/rosmur/local-llm-setup/blob/main/setup-local-llm.sh), then run it:
 
 ```bash
-bash Downloads/setup-local-pi.sh
+bash Downloads/setup-local-llm.sh
 ```
 
 ## Script Notes

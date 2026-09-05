@@ -12,7 +12,7 @@ description: Run local LLMs on your machine — fully offline, no account, no AP
 Run this in your terminal:
 
 ```bash
-bash -c "$(curl -fsSL https://raw.githubusercontent.com/rosmur/local-llm-setup/main/setup-local-pi.sh)"
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/rosmur/local-llm-setup/main/setup-local-llm.sh)"
 ```
 
 The script prompts you before every change, detects work already done, and is safe to re-run.

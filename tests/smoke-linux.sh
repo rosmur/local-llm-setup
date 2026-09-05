@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Linux smoke test for setup-local-pi.sh.
+# Linux smoke test for setup-local-llm.sh.
 #
 # Runs the script inside a clean Alpine container with stubbed `llama` and `pi`
 # binaries on a restricted PATH, so the script sees them "already installed" and
@@ -12,7 +12,7 @@
 set -uo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-SCRIPT="$ROOT/setup-local-pi.sh"
+SCRIPT="$ROOT/setup-local-llm.sh"
 STUBS="$ROOT/tests/stubs/bin"
 IMG="local-llm-setup-smoke:latest"
 
@@ -25,7 +25,7 @@ echo "==> building smoke image"
 docker build -q -t "$IMG" -f "$ROOT/tests/Dockerfile" "$ROOT" >/dev/null \
   || { echo "FAIL: docker build"; exit 1; }
 
-echo "==> running setup-local-pi.sh (stubbed, --network none)"
+echo "==> running setup-local-llm.sh (stubbed, --network none)"
 OUT=$(docker run --rm --network none \
   -v "$SCRIPT:/setup.sh:ro" \
   -v "$STUBS:/stubs:ro" \

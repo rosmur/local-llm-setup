@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# macOS smoke test for setup-local-pi.sh.
+# macOS smoke test for setup-local-llm.sh.
 #
 # Runs the script on THIS host with stubbed `llama`/`pi` binaries and a
 # restricted PATH (no /opt/homebrew, /usr/local, etc.), so real binaries can
@@ -13,7 +13,7 @@
 set -uo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-SCRIPT="$ROOT/setup-local-pi.sh"
+SCRIPT="$ROOT/setup-local-llm.sh"
 STUBS="$ROOT/tests/stubs/bin"
 
 if [ "$(uname -s)" != "Darwin" ]; then echo "SKIP: not macOS"; exit 0; fi
@@ -44,7 +44,7 @@ catch wait result
 exit [lindex $result 3]
 EXP
 
-echo "==> running setup-local-pi.sh (stubbed, temp HOME)"
+echo "==> running setup-local-llm.sh (stubbed, temp HOME)"
 OUT=$(expect -f "$EXPECT_SCRIPT" 2>&1); CODE=$?
 echo "$OUT"
 echo "---- llama stub calls ----"; cat "$LLAMA_STUB_LOG" 2>/dev/null

@@ -27,15 +27,3 @@ Four pieces, installed in order, each one needed by the next:
 | **A model** | The AI itself — a multi-gigabyte file you choose from a menu |
 | **pi** | A coding assistant that lives in your terminal |
 | **pi-llama plugin** | Connects pi to the model served by `llama serve` automatically |
-
-```mermaid
-flowchart TD
-    User@{ shape: manual-input, label: "User Input"}
-    Pi["`**pi** — the agent`"]
-    Server["`**llama-server** — runs the AI (part of llama.cpp)`"]
-    AIModel["`the **LLM model** — a file sitting on your disk`"]
-
-    User --> Pi
-    Pi --> Server
-    Server --> AIModel
-```

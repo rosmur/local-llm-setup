@@ -357,18 +357,22 @@ head_ "Step 4 of 4: connect pi to your local model"
 # Step 4a: pi-llama plugin. Replaces the old models.json approach — pi
 # auto-discovers the local model served by 'llama serve'. No manual config.
 if command -v pi >/dev/null 2>&1; then
-  say ""
-  say "Install the pi-llama plugin so pi auto-discovers your local model."
-  info "Command: pi install git:github.com/huggingface/pi-llama"
-  info "This replaces the old models.json approach — no manual config file is needed."
-  if ask "Install the pi-llama plugin now?"; then
-    if pi install git:github.com/huggingface/pi-llama; then
-      ok "pi-llama plugin installed."
-    else
-      warn "Plugin install reported an error. Run it again later with: pi install git:github.com/huggingface/pi-llama"
-    fi
+  if pi list 2>&1 | grep -q "pi-llama"; then
+    ok "pi-llama plugin is already installed."
   else
-    warn "Skipped. Run it later with: pi install git:github.com/huggingface/pi-llama"
+    say ""
+    say "Install the pi-llama plugin so pi auto-discovers your local model."
+    info "Command: pi install git:github.com/huggingface/pi-llama"
+    info "This replaces the old models.json approach — no manual config file is needed."
+    if ask "Install the pi-llama plugin now?"; then
+      if pi install git:github.com/huggingface/pi-llama; then
+        ok "pi-llama plugin installed."
+      else
+        warn "Plugin install reported an error. Run it again later with: pi install git:github.com/huggingface/pi-llama"
+      fi
+    else
+      warn "Skipped. Run it later with: pi install git:github.com/huggingface/pi-llama"
+    fi
   fi
 else
   warn "pi is not installed, so the plugin can't be added here."

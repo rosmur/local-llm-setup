@@ -23,18 +23,13 @@ Download the script from [github.com/rosmur/local-llm-setup](https://github.com/
 bash Downloads/setup-local-pi.sh
 ```
 
-## What to expect
+## Script Notes
 
-The script is written to be readable and to ask before it does anything. Every step explains what it is about to do, shows the exact command, and waits for you to type `y`. Typing anything else skips that step. `Ctrl-C` quits at any point.
-
-::: callout note
-- Written by AI
-- Tested and verified operation on MacBook Pro M1 (Sequoia)
-- Reviewed by human
+- The script is written to be readable and to ask before it does anything. 
+- Every step explains what it is about to do, shows the exact command, and waits for you to type `y`. Typing anything else skips that step. `Ctrl-C` quits at any point.
 - **Re-running the script is always safe.** Every step detects work that is already done and skips it. An interrupted run — a dropped connection, a closed laptop lid — is recovered by just starting again. The menu marks which models you already have, and nothing is downloaded twice.
-:::
 
-## What happens step by step
+## High Level Steps
 
 1. **llama.cpp** — Installed via Homebrew (macOS) or the official direct installer (macOS, Linux, Windows)
 2. **Model** — You pick from a menu of open-weight models, or type **0** to skip and download later

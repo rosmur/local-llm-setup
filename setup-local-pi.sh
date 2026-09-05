@@ -209,7 +209,7 @@ fetch_model() {
 say "Checking which models you already have..."
 S1=$(status_line "ggml-org" "gemma-4-E4B-it-GGUF"            "gemma-4-E4B"            "4.6 GB")
 S2=$(status_line "unsloth"  "gemma-4-26B-A4B-it-qat-GGUF"    "gemma-4-26B-A4B-it-qat" "15 GB")
-S3=$(status_line "unsloth"  "Qwen3.5-35B-A3B-GGUF"           "Qwen3.5-35B-A3B"        "20 GB")
+S3=$(status_line "unsloth"  "Qwen3.6-35B-A3B-GGUF"           "Qwen3.6-35B-A3B"        "20 GB")
 ANY_CACHED=$(list_any_cached)
 
 say ""
@@ -221,8 +221,8 @@ say "  ${BOLD}1)${RST} Gemma 4 E4B (Q4_0)             8B params, small and fast 
 say "     ggml-org/gemma-4-E4B-it-GGUF:Q4_0"
 say "  ${BOLD}2)${RST} Gemma 4 26B-A4B QAT            MoE, 4B active — fast for its size  ${S2}"
 say "     unsloth/gemma-4-26B-A4B-it-qat-GGUF:UD-Q4_K_XL"
-say "  ${BOLD}3)${RST} Qwen3.5 35B-A3B (Q4_K_M)       MoE, 3B active, strong at code     ${S3}"
-say "     unsloth/Qwen3.5-35B-A3B-GGUF:Q4_K_M"
+say "  ${BOLD}3)${RST} Qwen3.6 35B-A3B (Q4_K_M)       MoE, 3B active, strong at code     ${S3}"
+say "     unsloth/Qwen3.6-35B-A3B-GGUF:Q4_K_M"
 say "  ${BOLD}0)${RST} Skip the model download — no model now (steps 3 and 4 still run)"
 say ""
 RAM_GB=$(system_ram_gb)
@@ -238,7 +238,7 @@ fi
 # Report any cached models that aren't among the three offered above, so a
 # re-run of this script doesn't silently ignore what's already on disk.
 if [ -n "$ANY_CACHED" ]; then
-  OTHER_CACHED=$(printf '%s\n' "$ANY_CACHED" | grep -viE 'gemma-4-E4B|gemma-4-26B-A4B-it-qat|Qwen3.5-35B-A3B' || true)
+  OTHER_CACHED=$(printf '%s\n' "$ANY_CACHED" | grep -viE 'gemma-4-E4B|gemma-4-26B-A4B-it-qat|Qwen3.6-35B-A3B' || true)
   if [ -n "$OTHER_CACHED" ]; then
     say ""
     info "Other models already on disk (not offered above):"
@@ -256,8 +256,8 @@ while [ -z "$MODEL_REPO" ]; do
        MODEL_ORG="ggml-org"; MODEL_NAME="gemma-4-E4B-it-GGUF";         MODEL_FRAG="gemma-4-E4B" ;;
     2) MODEL_REPO="unsloth/gemma-4-26B-A4B-it-qat-GGUF:UD-Q4_K_XL";  MODEL_ALIAS="gemma-4-26b-a4b-qat"; MODEL_LABEL="Gemma 4 26B-A4B QAT"
        MODEL_ORG="unsloth"; MODEL_NAME="gemma-4-26B-A4B-it-qat-GGUF"; MODEL_FRAG="gemma-4-26B-A4B-it-qat" ;;
-    3) MODEL_REPO="unsloth/Qwen3.5-35B-A3B-GGUF:Q4_K_M";             MODEL_ALIAS="qwen3.5-35b-a3b";     MODEL_LABEL="Qwen3.5 35B-A3B"
-       MODEL_ORG="unsloth"; MODEL_NAME="Qwen3.5-35B-A3B-GGUF";        MODEL_FRAG="Qwen3.5-35B-A3B" ;;
+    3) MODEL_REPO="unsloth/Qwen3.6-35B-A3B-GGUF:Q4_K_M";             MODEL_ALIAS="qwen3.6-35b-a3b";     MODEL_LABEL="Qwen3.6 35B-A3B"
+       MODEL_ORG="unsloth"; MODEL_NAME="Qwen3.6-35B-A3B-GGUF";        MODEL_FRAG="Qwen3.6-35B-A3B" ;;
     0|s|S) MODEL_REPO="SKIP" ;;
     q|Q) say "Nothing downloaded. Exiting."; exit 0 ;;
     *) warn "Please type 1, 2, 3, 0 or q." ;;

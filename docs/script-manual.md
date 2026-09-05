@@ -64,7 +64,7 @@ The three repositories:
 ```
 ggml-org/gemma-4-E4B-it-GGUF:Q4_0
 unsloth/gemma-4-26B-A4B-it-qat-GGUF:UD-Q4_K_XL
-unsloth/Qwen3.5-35B-A3B-GGUF:Q4_K_M
+unsloth/Qwen3.6-35B-A3B-GGUF:Q4_K_M
 ```
 
 **Step 3 — pi.** Checks `node --version` against pi's minimum of 22.19.0 and reports, but does not act — pi's own installer handles Node. Then:

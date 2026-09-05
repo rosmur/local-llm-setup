@@ -21,7 +21,7 @@ description: Definitions of technical terms used throughout the documentation �
 :   Apple's GPU acceleration framework. On Macs with Apple Silicon (M1, M2, M3, M4), `llama.cpp` uses Metal via the `-ngl` flag to offload model layers to the GPU, significantly speeding up inference.
 
 **MoE**
-:   Mixture of Experts — a model architecture where only a subset of parameters (the "experts") activate for any given input. This allows much larger total model size while keeping inference fast, because most of the model stays dormant for each token. For example, Qwen3.5 35B-A3B has 35B total parameters but only activates ~3B per token.
+:   Mixture of Experts — a model architecture where only a subset of parameters (the "experts") activate for any given input. This allows much larger total model size while keeping inference fast, because most of the model stays dormant for each token. For example, Qwen3.6 35B-A3B has 35B total parameters but only activates ~3B per token.
 
 **ngl**
 :   "Number of GPU layers" — the `-ngl` flag in `llama.cpp` controls how many layers of the model are offloaded to the GPU. On a Mac this means Metal acceleration. `-ngl 99` offloads all layers.

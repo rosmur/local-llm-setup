@@ -1,6 +1,6 @@
 ---
 title: Model Choices
-description: The three open-weight models offered by the setup script — Gemma 4 E4B, Gemma 4 26B, and Qwen3.5 35B — and how to pick one.
+description: The three open-weight models offered by the setup script — Gemma 4 E4B, Gemma 4 26B, and Qwen3.6 35B — and how to pick one.
 ---
 
 # Model Choices
@@ -11,7 +11,7 @@ Step 3 of the setup script offers three options plus a **0 (skip)** choice. All 
 |---|---|---|---|---|
 | **1** | Gemma 4 E4B | ~4.6 GB | 12GB | The small, fast one. Works on modest machines. A reasonable first choice if you're unsure. |
 | **2** | Gemma 4 26B-A4B (QAT) | ~15 GB | 24GB | Much more capable, but only activates a small slice of itself per word, so it stays fast. |
-| **3** | Qwen3.5 35B-A3B | ~20 GB | 32 GB | Same idea, different family. Stronger at code. |
+| **3** | Qwen3.6 35B-A3B | ~20 GB | 32 GB | Same idea, different family. Stronger at code. |
 
 If you pick wrong, nothing is lost. Re-run the script and choose a different one; models stay cached on disk, and `llama serve` uses whichever you chose most recently (or downloads one on first run if you skipped).
 

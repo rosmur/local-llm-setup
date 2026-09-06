@@ -7,23 +7,29 @@ description: Run local LLMs on your machine — fully offline, no account, no AP
 
 **Use AI freely — Your terms, your rules, no account, no API key, no subscription, and none of your information is sent to anybody else's computers.**
 
-## Quick Install
+## Automated Install
 
-Run this in your terminal:
+Simply run this in your terminal and it will handle the full installation
 
 ```bash
 bash -c "$(curl -fsSL https://raw.githubusercontent.com/rosmur/local-llm-setup/main/setup-local-llm.sh)"
 ```
 
-The script prompts you before every change, detects work already done, and is safe to re-run.
+The script 
+
+- Tells you what its doing
+- Asks for your approval before every install/change
+- Detects existing setup and/or work already done, and is safe to re-run.
+
+Manual installation: If you prefer to install each item manually, please see the steps here
 
 ## What this sets up
 
-Four pieces, installed in order, each one needed by the next:
+Four items are installed, each one needed by the next:
 
 | Piece | What it is |
 |---|---|
 | **llama.cpp** | Software that runs AI models on your own hardware |
-| **A model** | The AI itself — a multi-gigabyte file you choose from a menu |
-| **pi** | A coding assistant that lives in your terminal |
+| **A model** | The AI itself — a multi-gigabyte file |
+| **pi** | An agentic "harness" that works in the terminal |
 | **pi-llama plugin** | Connects pi to the model served by `llama serve` automatically |

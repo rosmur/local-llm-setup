@@ -21,7 +21,7 @@ The script
 - Asks for your approval before every install/change
 - Detects existing setup and/or work already done, and is safe to re-run.
 
-Manual installation: If you prefer to install each item manually, please see the steps here
+Manual installation: If you prefer to install each item manually, please see the steps [here](manual-installation.md)
 
 ## What this sets up
 

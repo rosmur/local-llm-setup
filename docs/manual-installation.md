@@ -59,8 +59,7 @@ The direct install script command is copied here for convenience:
 curl -fsSL https://pi.dev/install.sh | sh
 ```
 
-### Notes on the installer
-
+::: collapsible "Notes on the installer"
 Step 3 pipes a remote script into a shell. That deserves scrutiny, so here is what `pi.dev/install.sh` does, from reading it:
 
 - **Node.js.** Requires ≥ 22.19.0. If missing or too old it asks, then uses `brew install node` when Homebrew exists (macOS). Without Homebrew it downloads a Node 22 tarball from `nodejs.org` and verifies it against the published `SHASUMS256.txt` before extracting.
@@ -75,6 +74,7 @@ To read it yourself before running anything:
 ```bash
 curl -fsSL https://pi.dev/install.sh | less
 ```
+:::
 
 ## Step 4 — connect pi to your local model
 

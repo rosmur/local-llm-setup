@@ -1,6 +1,7 @@
 {
   "title": "Local LLM Setup",
   "url": "https://rosmur.github.io/local-llm-setup/",
+  "favicon": "assets/images/favicon.png",
   "src": "docs",
   "out": "site",
   "engine": "js",

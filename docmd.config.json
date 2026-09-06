@@ -49,6 +49,10 @@
         {
           "title": "Model Choices",
           "path": "/model-choices/"
+        },
+        {
+          "title": "Manual Installation",
+          "path": "/manual-installation/"
         }
       ]
     },
@@ -72,10 +76,6 @@
     {
       "title": "Reference",
       "children": [
-        {
-          "title": "Manual Installation",
-          "path": "/manual-installation/"
-        },
         {
           "title": "Troubleshooting",
           "path": "/troubleshooting/"

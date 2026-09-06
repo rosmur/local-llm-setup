@@ -7,11 +7,12 @@ description: The three open-weight models offered by the setup script — Gemma 
 
 Step 3 of the setup script offers three options plus a **0 (skip)** choice. All are free and open-weight. These are the best overall models *targeted for RAM <32 GB* available as of July 2026 with relatively large user validation and maturity.
 
-|   | Model | Download | Min RAM | Notes |
+|   | Model | Download | Recommended Min RAM | Notes |
 |---|---|---|---|---|
-| **1** | Gemma 4 E4B | ~4.6 GB | 8GB | The small, fast one. Works on modest machines. A reasonable first choice if you're unsure. |
-| **2** | Gemma 4 26B-A4B (QAT) | ~15 GB | 24GB | Much more capable, but only activates a small slice of itself per word, so it stays fast. |
-| **3** | Qwen3.6 35B-A3B | ~20 GB | 32 GB | Same idea, different family. Stronger at code. |
+| **1** | [Gemma 4 E2B](https://huggingface.co/unsloth/gemma-4-E2B-it-GGUF) | ~3 GB | 8GB | The small, fast one. Works on modest machines. A reasonable first choice if you're unsure. |
+| **1** | [Gemma 4 E4B](https://huggingface.co/unsloth/gemma-4-E4B-it-GGUF) | ~4.6 GB | 12GB | The small, fast one. Works on modest machines. A reasonable first choice if you're unsure. |
+| **2** | [Gemma 4 26B-A4B (QAT)](https://huggingface.co/google/gemma-4-26B-A4B-it-qat-q4_0-gguf) | ~15 GB | 24GB | Much more capable, but only activates a small slice of itself per word, so it stays fast. |
+| **3** | [Qwen3.6 35B-A3B](https://huggingface.co/unsloth/Qwen3.6-35B-A3B-GGUF) | ~20 GB | 32 GB | Same idea, different family. Stronger at code. |
 
 *NOTE: Minimum RAM values are recommendations only, not a hard requirement*
 

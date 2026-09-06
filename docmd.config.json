@@ -37,6 +37,7 @@
     },
     {
       "title": "Getting Started",
+      "icon": "rocket",
       "children": [
         {
           "title": "Quick Start",
@@ -58,6 +59,7 @@
     },
     {
       "title": "Using the Setup",
+      "icon": "zap",
       "children": [
         {
           "title": "What's Installed",
@@ -75,6 +77,7 @@
     },
     {
       "title": "Reference",
+      "icon": "book",
       "children": [
         {
           "title": "Troubleshooting",
@@ -88,6 +91,7 @@
     },
     {
       "title": "GitHub",
+      "icon": "github",
       "path": "https://github.com/rosmur/local-llm-setup",
       "external": true
     }
